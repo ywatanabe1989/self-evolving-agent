@@ -620,3 +620,4 @@ flycheck_*.el
 **/*.db
 *.db-shm
 *.db-wal
+.old
