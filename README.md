@@ -1,7 +1,7 @@
 <!-- ---
 !-- title: ./self-evolving-agent/README.md
 !-- author: ywatanabe
-!-- date: 2024-12-02 07:31:45
+!-- date: 2024-12-02 07:39:05
 !-- --- -->
 
 
@@ -27,10 +27,11 @@ git clone https://github.com/user/self-evolving-agent.git ~/.emacs.d/lisp/self-e
 3. Call the installation function
 ```elisp
 M-x sea-install
+```
 
 ## Usage
 
-```elisp
+``` elisp
 M-x sea-self-evolve
 ```
 

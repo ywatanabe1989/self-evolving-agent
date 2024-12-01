@@ -1,19 +1,29 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-02 06:50:17
-;;; Time-stamp: <2024-12-02 06:50:17 (ywatanabe)>
+;;; Author: 2024-12-02 07:40:22
+;;; Time-stamp: <2024-12-02 07:40:22 (ywatanabe)>
 ;;; File: ./self-evolving-agent/src/sea-config.el
 
+
+;;; Code:
+
+(require 'json)
+(require 'request)
+(require 'w3m nil t)
 
 (defgroup sea nil
   "Self-evolving agent configuration."
   :group 'applications)
+
+(defgroup self-evolving-agent nil
+  "Self-evolving agent for Emacs."
+  :group 'tools
+  :prefix "sea-")
 
 ;; Base directories
 (defcustom sea-work-dir "~/.sea"
   "SEA working directory."
   :type 'directory
   :group 'sea)
-
 
 ;; Subdirectories
 (defvar sea-workspace-dir (expand-file-name "workspace" sea-work-dir)
@@ -65,6 +75,28 @@
   "When non-nil, require user approval for critical operations."
   :type 'boolean
   :group 'sea)
+
+(defcustom sea-api-timeout 30
+  "Timeout in seconds for API calls."
+  :type 'integer
+  :group 'self-evolving-agent)
+
+(defcustom sea-readonly-mode t
+  "When non-nil, prevent direct modifications to agent's core code."
+  :type 'boolean
+  :group 'self-evolving-agent)
+
+(defvar sea-anthropic-key (getenv "ANTHROPIC_API_KEY")
+  "API key for Anthropic Claude.")
+
+(defvar sea-debug nil
+  "Enable debug logging when non-nil.")
+
+(defvar sea-backup-limit 10
+  "Maximum number of backups to keep.")
+
+(defvar sea-debug nil
+  "Enable debug logging when non-nil.")
 
 (provide 'sea-config)
 
