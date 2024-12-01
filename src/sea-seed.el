@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-01 20:40:51
-;;; Time-stamp: <2024-12-01 20:40:51 (ywatanabe)>
+;;; Author: 2024-12-01 20:45:09
+;;; Time-stamp: <2024-12-01 20:45:09 (ywatanabe)>
 ;;; File: ./self-evolving-agent/seed.el
 
 
@@ -45,6 +45,9 @@
 
 (defvar sea-anthropic-key (getenv "ANTHROPIC_API_KEY")
   "API key for Anthropic Claude.")
+
+(defvar sea-debug nil
+  "Enable debug logging when non-nil.")
 
 (defvar sea-backup-limit 10
   "Maximum number of backups to keep.")

@@ -1,47 +1,55 @@
 <!-- ---
 !-- title: ./self-evolving-agent/README.md
 !-- author: ywatanabe
-!-- date: 2024-12-01 20:36:59
+!-- date: 2024-12-01 20:49:57
 !-- --- -->
 
 
-# Self-Evolving Agent for Emacs
+# Self-Evolving Agent (SEA) for Emacs
 
-An Emacs package that implements a self-improving AI agent system.
+An Emacs package implementing a self-improving AI agent system.
 
-## Security & Permissions
+## Installation
 
-### Initial Setup
+1. Clone repository:
+```bash
+git clone https://github.com/user/self-evolving-agent.git ~/.emacs.d/lisp/self-evolving-agent
+```
+
+2. Run setup script:
+```bash
+cd ~/.emacs.d/lisp/self-evolving-agent
 ./docs/install.sh
+```
 
-### Emacs Configuration
+3. Add to your Emacs config:
 ```elisp
+(add-to-list 'load-path "~/.emacs.d/lisp/self-evolving-agent")
+(require 'sea)
+```
+
+## Security Configuration
+
+```elisp 
 (setq sea-workspace-dir "/opt/sea")
-(setq sea-readonly-mode t)
-(setq sea-sandbox-mode t)
+(setq sea-readonly-mode t)  ; Recommended
+(setq sea-sandbox-mode t)   ; Recommended
 (setq sea-require-approval t)
 ```
 
 ## Components
 
-- core.el: Core agent (read-only)
-- network.el: Network coordination
-- seed.el: Configuration
-- utils.el: Utilities
-- version_control.el: Git integration
+- sea-core.el: Core agent functionality (read-only)
+- sea-network.el: Network operations
+- sea-seed.el: System initialization
+- sea-utils.el: Utility functions
+- sea-version-control.el: Version control integration
+- sea-config.el: Basic configurations
 
 ## Usage
 
 ```elisp
-;; Safety guaranteed operations
-(sea-self-improve "path/to/file.el") 
+;; Safety-first operations
+(sea-self-improve "path/to/file.el")
 (sea-spawn-agents '(task1 task2))
 ```
-
-# Check permissions
-ls -la /opt/sea
-ls -la /home/sea/.config/sea/keys.el
-
-# Verify group memberships
-groups sea
-groups ywatanabe

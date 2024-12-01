@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-01 20:41:04
-;;; Time-stamp: <2024-12-01 20:41:04 (ywatanabe)>
+;;; Author: 2024-12-01 20:43:24
+;;; Time-stamp: <2024-12-01 20:43:24 (ywatanabe)>
 ;;; File: ./self-evolving-agent/core.el
 
 
@@ -62,7 +62,7 @@ INPUT is the task description or command for the agent."
                    ("anthropic-version" . "2023-06-01")))
          (data (json-encode
                 `((model . "claude-3-5-sonnet-20241022")
-                  (max_tokens . 1024)
+                  (max_tokens . 8192)
                   (messages . [((role . "user")
                               (content . ,prompt))]))))
          (response (request
