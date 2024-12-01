@@ -1,7 +1,7 @@
 <!-- ---
-!-- title: ./.dotfiles/.emacs.d/lisp/self-evolving-agent/README.md
+!-- title: ./self-evolving-agent/README.md
 !-- author: ywatanabe
-!-- date: 2024-12-01 20:28:38
+!-- date: 2024-12-01 20:36:59
 !-- --- -->
 
 
@@ -11,64 +11,37 @@ An Emacs package that implements a self-improving AI agent system.
 
 ## Security & Permissions
 
-### User Setup
-```bash
-# Create dedicated sea user and group
-sudo useradd -r sea
-sudo usermod -aG sea ywatanabe
-
-# Set workspace permissions
-sudo mkdir -p /opt/sea
-sudo chown -R sea:sea /opt/sea
-sudo chmod -R 2775 /opt/sea
-```
+### Initial Setup
+./docs/install.sh
 
 ### Emacs Configuration
 ```elisp
-;; Set restricted workspace
 (setq sea-workspace-dir "/opt/sea")
-
-;; Enable mandatory safety measures
-(setq sea-readonly-mode t)          ; Read-only mode for core files
-(setq sea-sandbox-mode t)           ; Isolated evaluation environment
-(setq sea-require-approval t)       ; Manual approval for modifications
+(setq sea-readonly-mode t)
+(setq sea-sandbox-mode t)
+(setq sea-require-approval t)
 ```
 
 ## Components
 
-- core.el: Core agent functionality (read-only)
-- network.el: Network coordination (restricted)
-- seed.el: Basic configuration
-- utils.el: Utility functions
+- core.el: Core agent (read-only)
+- network.el: Network coordination
+- seed.el: Configuration
+- utils.el: Utilities
 - version_control.el: Git integration
 
-## Installation
-
-1. Set up permissions:
-```bash
-sudo -u sea mkdir -p /opt/sea/{backups,logs,workspace}
-sudo chmod 2775 /opt/sea/*
-```
-
-2. Install dependencies:
-```elisp
-(require 'request)
-(require 'json)
-(require 'w3m)
-```
-
-3. Configure API keys:
-```bash
-# Store keys in sea user's home
-sudo -u sea mkdir -p ~sea/.config/sea
-sudo -u sea touch ~sea/.config/sea/keys.el
-sudo chmod 600 ~sea/.config/sea/keys.el
-```
-
-## Usage (Restricted Mode)
+## Usage
 
 ```elisp
-;; All operations require explicit user approval
-(sea-self-improve "path/to/file.el") ; Prompts for confirmation
-(sea-spawn-agents '(task1 task2))    ; Runs in sandbox
+;; Safety guaranteed operations
+(sea-self-improve "path/to/file.el") 
+(sea-spawn-agents '(task1 task2))
 ```
+
+# Check permissions
+ls -la /opt/sea
+ls -la /home/sea/.config/sea/keys.el
+
+# Verify group memberships
+groups sea
+groups ywatanabe

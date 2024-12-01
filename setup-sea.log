@@ -1,0 +1,14 @@
+[2024-12-01 20:36:36] Configuring groups...
+[2024-12-01 20:36:36] Setting home directory permissions...
+[2024-12-01 20:36:36] Setting up workspace...
+[2024-12-01 20:36:36] Verifying setup...
+total 20
+drwxrwsr-x 5 sea  sea  4096 Dec  1 20:30 .
+drwxr-xr-x 7 root root 4096 Dec  1 20:29 ..
+drwxrwsr-x 2 sea  sea  4096 Dec  1 20:30 backups
+drwxrwsr-x 2 sea  sea  4096 Dec  1 20:30 logs
+drwxrwsr-x 2 sea  sea  4096 Dec  1 20:30 workspace
+-rw------- 1 sea sea 0 Dec  1 20:36 /home/sea/.config/sea/keys.el
+sea : sea ywatanabe
+ywatanabe : ywatanabe adm dialout cdrom floppy sudo audio dip video plugdev netdev docker emacs-readers emacs-agent-readonly ywatanabe-r emacs-agent sea
+[2024-12-01 20:36:36] Setup completed successfully

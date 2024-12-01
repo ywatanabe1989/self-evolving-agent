@@ -1,7 +1,7 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-01 20:22:52
-;;; Time-stamp: <2024-12-01 20:22:52 (ywatanabe)>
-;;; File: ./.dotfiles/.emacs.d/lisp/self-evolving-agent/core.el
+;;; Author: 2024-12-01 20:41:04
+;;; Time-stamp: <2024-12-01 20:41:04 (ywatanabe)>
+;;; File: ./self-evolving-agent/core.el
 
 
 ;;; -*- lexical-binding: t -*-
@@ -13,7 +13,7 @@
 ;; Core functionality for self-evolving agent
 
 ;;; Code:
-
+(require 'sea-config)
 (require 'sea-seed)
 (require 'sea-utils)
 (require 'sea-version-control)

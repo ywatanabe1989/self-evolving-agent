@@ -1,7 +1,7 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-01 20:24:15
-;;; Time-stamp: <2024-12-01 20:24:16 (ywatanabe)>
-;;; File: ./.dotfiles/.emacs.d/lisp/self-evolving-agent/seed.el
+;;; Author: 2024-12-01 20:40:51
+;;; Time-stamp: <2024-12-01 20:40:51 (ywatanabe)>
+;;; File: ./self-evolving-agent/seed.el
 
 
 ;;; -*- lexical-binding: t -*-
@@ -13,7 +13,7 @@
 ;; Core configuration and dependencies for self-evolving agent
 
 ;;; Code:
-
+(require 'sea-config)
 (require 'json)
 (require 'request)
 (require 'w3m nil t)
