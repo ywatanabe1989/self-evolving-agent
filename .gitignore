@@ -621,3 +621,5 @@ flycheck_*.el
 *.db-shm
 *.db-wal
 .old
+src/.old
+src/sea-setup-sea.log
