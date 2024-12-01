@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-01 21:21:16
-;;; Time-stamp: <2024-12-01 21:21:16 (ywatanabe)>
+;;; Author: 2024-12-01 21:31:40
+;;; Time-stamp: <2024-12-01 21:31:40 (ywatanabe)>
 ;;; File: ./self-evolving-agent/src/sea-version-control.el
 
 
@@ -31,8 +31,8 @@
   :type 'string
   :group 'sea-git)
 
-(defvar sea-github-token nil
-  "GitHub access token loaded from sea-github-token-file.")
+;; (defvar sea-github-token nil
+;;   "GitHub access token loaded from sea-github-token-file.")
 
 (defcustom sea-github-token-file "~/.config/sea/github-token"
   "Path to file containing GitHub token."
@@ -53,13 +53,14 @@
 (defun sea--load-github-token ()
   "Load GitHub token from file with validation and error handling."
   (condition-case err
-      (let ((token-file (expand-file-name sea-github-token-file)))
-        (unless (file-exists-p token-file)
-          (error "GitHub token file not found: %s" token-file))
-        (unless (file-readable-p token-file)
-          (error "GitHub token file not readable: %s" token-file))
+      (let* ((token-file (expand-file-name sea-github-token-file))
+             (real-file (file-truename token-file)))  ; Resolve symlink
+        (unless (file-exists-p real-file)
+          (error "GitHub token file not found: %s" real-file))
+        (unless (file-readable-p real-file)
+          (error "GitHub token file not readable: %s" real-file))
         (let ((token (with-temp-buffer
-                      (insert-file-contents token-file)
+                      (insert-file-contents real-file)
                       (string-trim (buffer-string)))))
           (sea--validate-github-token token)
           token))
@@ -76,25 +77,26 @@
 (sea--get-github-token)
 
 
+
 (defun sea-self-evolve (&optional file)
   "Update FILE with improvements suggested by LLM.
 If FILE is nil, use sea source directory.
-Improvement aspects are read from user_request file or prompted."
+Improvement aspects are read from user-request file or prompted."
   (interactive)
-  (unless sea-github-token
-    (error "GitHub token not set. Please set sea-github-token"))
-
-  (let* ((file (or file (expand-file-name "src" sea-workspace-dir)))
-         (request-file (expand-file-name "user_request" sea-workspace-dir))
+  (let* ((github-token (sea--get-github-token))
+         (file (or file (expand-file-name "src" sea-workspace-dir)))
+         (request-file sea-user-request-file)
          (aspects (if (file-exists-p request-file)
                      (with-temp-buffer
                        (insert-file-contents request-file)
                        (buffer-string))
                    (read-string "Aspects to improve (empty for general review): ")))
-         (workspace-dir "/opt/sea/workspace/self-evolving-agent")
-         (relative-path (file-relative-name file "/home/ywatanabe/.dotfiles/.emacs.d/lisp/self-evolving-agent"))
-         (work-file (expand-file-name relative-path workspace-dir))
+         (workspace-dir (expand-file-name "workspace" sea-workspace-dir))
+         (work-file (expand-file-name (file-name-nondirectory file) workspace-dir))
          (backup-file (sea--create-backup work-file)))
+
+    (unless github-token
+      (error "GitHub token not available. Check %s" sea-github-token-file))
 
     (make-directory (file-name-directory work-file) t)
     (copy-file file work-file t)

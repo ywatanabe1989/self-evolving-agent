@@ -1,7 +1,7 @@
 <!-- ---
 !-- title: ./self-evolving-agent/README.md
 !-- author: ywatanabe
-!-- date: 2024-12-01 21:08:23
+!-- date: 2024-12-01 21:27:54
 !-- --- -->
 
 
@@ -31,6 +31,9 @@ cd ~/.emacs.d/lisp/self-evolving-agent
 ## Security Configuration
 
 ```elisp 
+;; (setq sea-github-token-file "~/.config/sea/github-token")
+;; (setq sea-github-token-file "~/.config/sea/user-request")
+;; (setq sea-github-token-file "~/.config/sea/seq-suggestion")
 ;; (setq sea-workspace-dir "/opt/sea")
 ;; (setq sea-readonly-mode t)
 ;; (setq sea-sandbox-mode t)
