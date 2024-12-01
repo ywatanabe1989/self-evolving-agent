@@ -1,29 +1,28 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-01 21:29:13
-;;; Time-stamp: <2024-12-01 21:29:13 (ywatanabe)>
+;;; Author: 2024-12-01 22:26:25
+;;; Time-stamp: <2024-12-01 22:26:25 (ywatanabe)>
 ;;; File: ./self-evolving-agent/src/sea.el
 
 
-(defvar sea-root-dir (file-name-directory (or load-file-name buffer-file-name))
-  "Root directory of SEA installation.")
+;; User installation paths
+(defvar sea-user-root-dir (file-name-directory (directory-file-name
+                                              (file-name-directory
+                                               (or load-file-name buffer-file-name))))
+  "User's SEA installation root directory.")
 
-(add-to-list 'load-path sea-root-dir)
-(add-to-list 'load-path (expand-file-name "src" sea-root-dir))
+(defvar sea-user-source-dir (expand-file-name "src" sea-user-root-dir)
+  "User's SEA source directory.")
 
-;; (add-to-list 'load-path
-;;              (expand-file-name
-;;               (concat (file-name-directory (or load-file-name buffer-file-name))
-;;                      "src")))
+(add-to-list 'load-path sea-user-root-dir)
+(add-to-list 'load-path sea-user-source-dir)
 
 ;; Then load components in order
-(require 'sea-config)  ; First load configurations
-(require 'sea-seed)    ; Then basic requirements
+(require 'sea-config)
+(require 'sea-seed)
 (require 'sea-utils)
 (require 'sea-version-control)
 (require 'sea-network)
 (require 'sea-core)
-
-(message "%s was loaded." (file-name-nondirectory (or load-file-name buffer-file-name)))
 
 (provide 'sea)
 

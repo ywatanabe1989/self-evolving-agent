@@ -1,13 +1,8 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-01 21:31:40
-;;; Time-stamp: <2024-12-01 21:31:40 (ywatanabe)>
+;;; Author: 2024-12-01 23:02:58
+;;; Time-stamp: <2024-12-01 23:02:58 (ywatanabe)>
 ;;; File: ./self-evolving-agent/src/sea-version-control.el
 
-
-;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-01 20:21:39
-;;; Time-stamp: <2024-12-01 20:21:39 (ywatanabe)>
-;;; File: ./.dotfiles/.emacs.d/lisp/self-evolving-agent/version_control.el
 
 ;;; Commentary:
 ;; Version control functionality for self-evolving agent
@@ -31,9 +26,6 @@
   :type 'string
   :group 'sea-git)
 
-;; (defvar sea-github-token nil
-;;   "GitHub access token loaded from sea-github-token-file.")
-
 (defcustom sea-github-token-file "~/.config/sea/github-token"
   "Path to file containing GitHub token."
   :type 'string
@@ -54,7 +46,7 @@
   "Load GitHub token from file with validation and error handling."
   (condition-case err
       (let* ((token-file (expand-file-name sea-github-token-file))
-             (real-file (file-truename token-file)))  ; Resolve symlink
+             (real-file (file-truename token-file)))
         (unless (file-exists-p real-file)
           (error "GitHub token file not found: %s" real-file))
         (unless (file-readable-p real-file)
@@ -76,45 +68,82 @@
 ;; Replace existing initialization with:
 (sea--get-github-token)
 
+(defun sea--init-workspace ()
+  "Initialize SEA workspace with symbolic links."
+  (interactive)
+  (let* ((user-name (user-login-name))
+         (source-dir (directory-file-name sea-user-root-dir))
+         (workspace-dir (directory-file-name sea-workspace-dir))
+         (target-link (expand-file-name "self-evolving-agent" workspace-dir)))
+
+    ;; Verify user is in sea group
+    (unless (member "sea" (split-string (shell-command-to-string
+                                       (format "groups %s" user-name))))
+      (error "Current user must be in 'sea' group. Run install.sh first"))
+
+    ;; Create base directories
+    (dolist (dir (list sea-work-dir
+                      sea-workspace-dir
+                      sea-backups-dir
+                      sea-logs-dir
+                      sea-requests-dir
+                      sea-config-dir))
+      (unless (file-exists-p dir)
+        (make-directory dir t)
+        (set-file-modes dir #o700)))
+
+    ;; Create symbolic link
+    (when (file-exists-p target-link)
+      (delete-file target-link))
+    (make-symbolic-link source-dir target-link)))
+
+;; ;; Call this before sea-self-evolve
+;; (sea--init-workspace)
+;; ;; rm ~/.sea/workspace/ -rf
+;; ;; tree ~/.sea
 
 
 (defun sea-self-evolve (&optional file)
   "Update FILE with improvements suggested by LLM.
-If FILE is nil, use sea source directory.
-Improvement aspects are read from user-request file or prompted."
+If FILE is nil, use sea source directory."
   (interactive)
+  (sea--init-workspace)
   (let* ((github-token (sea--get-github-token))
-         (file (or file (expand-file-name "src" sea-workspace-dir)))
+         (file (or file (expand-file-name "sea.el" sea-source-dir)))
          (request-file sea-user-request-file)
          (aspects (if (file-exists-p request-file)
                      (with-temp-buffer
                        (insert-file-contents request-file)
                        (buffer-string))
                    (read-string "Aspects to improve (empty for general review): ")))
-         (workspace-dir (expand-file-name "workspace" sea-workspace-dir))
-         (work-file (expand-file-name (file-name-nondirectory file) workspace-dir))
-         (backup-file (sea--create-backup work-file)))
+         (workspace-dir sea-workspace-dir))
 
     (unless github-token
       (error "GitHub token not available. Check %s" sea-github-token-file))
 
-    (make-directory (file-name-directory work-file) t)
-    (copy-file file work-file t)
+    (unless (file-exists-p file)
+      (error "Source file not found: %s" file))
 
-    (sea-think
-     (format "Review and improve %s\nFocus on these aspects:\n%s"
-             work-file
-             (if (string-empty-p aspects)
-                 "General code review and improvements"
-               aspects)))
+    (let* ((work-file (expand-file-name (file-name-nondirectory file) workspace-dir))
+           (backup-file (sea--create-backup work-file)))
 
-    (with-current-buffer (find-file-noselect work-file)
-      (sea--update-timestamp)
-      (save-buffer))
+      (copy-file file work-file t)
 
-    (when (file-exists-p backup-file)
-      (let ((changes (sea--diff-files backup-file work-file)))
-        (sea--log-change work-file backup-file changes)))))
+      (sea-think
+       (format "Review and improve %s\nFocus on these aspects:\n%s"
+               work-file
+               (if (string-empty-p aspects)
+                   "General code review and improvements"
+                 aspects)))
+
+      (with-current-buffer (find-file-noselect work-file)
+        (sea--update-timestamp)
+        (save-buffer))
+
+      (when (file-exists-p backup-file)
+        (let ((changes (sea--diff-files backup-file work-file)))
+          (sea--log-change work-file backup-file changes))))))
+; (sea-self-evolve)
 
 (defun sea--ensure-not-main ()
   "Ensure we're not on main branch."

@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-01 21:33:01
-;;; Time-stamp: <2024-12-01 21:33:01 (ywatanabe)>
+;;; Author: 2024-12-01 22:55:15
+;;; Time-stamp: <2024-12-01 22:55:15 (ywatanabe)>
 ;;; File: ./self-evolving-agent/src/sea-config.el
 
 
@@ -8,56 +8,54 @@
   "Self-evolving agent configuration."
   :group 'applications)
 
-(defcustom sea-workspace-dir "/opt/sea"
-  "Base directory for SEA operations."
+;; Base directories
+(defcustom sea-work-dir "~/.sea"
+  "SEA working directory."
   :type 'directory
   :group 'sea)
 
-(defcustom sea-config-dir (expand-file-name "~/.config/sea")
-  "Directory for SEA configuration files."
-  :type 'directory
-  :group 'sea)
 
+;; Subdirectories
+(defvar sea-workspace-dir (expand-file-name "workspace" sea-work-dir)
+  "Directory for main SEA operations.")
+
+(defvar sea-source-dir (expand-file-name "self-evolving-agent/src" sea-workspace-dir)
+  "Directory for main SEA operations.")
+
+(defvar sea-backups-dir (expand-file-name "backups" sea-work-dir)
+  "Directory for backup files.")
+
+(defvar sea-logs-dir (expand-file-name "logs" sea-work-dir)
+  "Directory for log files.")
+
+(defvar sea-requests-dir (expand-file-name "requests" sea-work-dir)
+  "Directory for improvement requests.")
+
+(defvar sea-config-dir (expand-file-name "config" sea-work-dir)
+  "Directory for configuration files.")
+
+;; Configuration files
 (defcustom sea-github-token-file (expand-file-name "github-token" sea-config-dir)
-  "Path to file containing GitHub token.
-Must be readable only by the owner (600 permissions)."
-  :type 'string
+  "Path to GitHub token file. Requires 600 permissions."
+  :type 'file
   :group 'sea)
 
-(defcustom sea-user-request-file (expand-file-name "user-request.md" sea-config-dir)
-  "Path to file containing user's improvement requests."
-  :type 'string
+(defcustom sea-user-request-file (expand-file-name "user-request.md" sea-requests-dir)
+  "File for user's improvement requests."
+  :type 'file
   :group 'sea)
 
-(defcustom sea-suggestion-file (expand-file-name "sea-suggestion.md" sea-config-dir)
-  "Path to file containing SEA's improvement suggestions."
-  :type 'string
+(defcustom sea-request-file (expand-file-name "sea-request.md" sea-requests-dir)
+  "File for SEA's improvement suggestions."
+  :type 'file
   :group 'sea)
 
-(defun sea--ensure-config-files ()
-  "Ensure SEA configuration files exist."
-  (unless (file-exists-p sea-config-dir)
-    (make-directory sea-config-dir t)
-    (set-file-modes sea-config-dir #o700))
-
-  (dolist (file (list sea-github-token-file
-                     sea-user-request-file
-                     sea-suggestion-file))
-    (unless (file-exists-p file)
-      (with-temp-file file
-        (insert (cond
-                ((equal file sea-user-request-file)
-                 "# List improvement requests here\n")
-                ((equal file sea-suggestion-file)
-                 "# SEA improvement suggestions\n")
-                (t ""))))
-      (set-file-modes file #o600))))
-
-(defcustom sea-history-file (expand-file-name "history.log" sea-workspace-dir)
+(defcustom sea-history-file (expand-file-name "history.log" sea-logs-dir)
   "File to store agent history."
   :type 'file
   :group 'sea)
 
+;; Operation modes
 (defcustom sea-readonly-mode t
   "When non-nil, prevent modifications to core agent files."
   :type 'boolean
@@ -73,8 +71,6 @@ Must be readable only by the owner (600 permissions)."
   :type 'boolean
   :group 'sea)
 
-
 (provide 'sea-config)
-
 
 (message "%s was loaded." (file-name-nondirectory (or load-file-name buffer-file-name)))

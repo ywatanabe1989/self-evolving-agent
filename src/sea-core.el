@@ -1,7 +1,7 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-01 20:43:24
-;;; Time-stamp: <2024-12-01 20:43:24 (ywatanabe)>
-;;; File: ./self-evolving-agent/core.el
+;;; Author: 2024-12-01 23:04:08
+;;; Time-stamp: <2024-12-01 23:04:08 (ywatanabe)>
+;;; File: ./self-evolving-agent/src/sea-core.el
 
 
 ;;; -*- lexical-binding: t -*-
@@ -21,12 +21,36 @@
 (defvar sea-context nil
   "Current context of the agent.")
 
+;; (defun sea-think (input)
+;;   "Main entry point for agent thinking process.
+;; INPUT is the task description or command for the agent."
+;;   (interactive "sTask: ")
+;;   (unless sea-anthropic-key
+;;     (user-error "ANTHROPIC_API_KEY not set"))
+
+;;   (if (string-match-p "Update.*self" input)
+;;       (sea-self-evolve
+;;        (expand-file-name "~/.dotfiles/.emacs.d/lisp/self-evolving-agent/core.el"))
+;;     (condition-case err
+;;         (let* ((context (sea--get-context))
+;;                (prompt (sea--build-prompt input context))
+;;                (commands (sea--run-llm prompt)))
+;;           (when commands
+;;             (sea--execute-commands commands)))
+;;       (error (message "Error in sea-think: %S" err)))))
+
+
 (defun sea-think (input)
   "Main entry point for agent thinking process.
 INPUT is the task description or command for the agent."
   (interactive "sTask: ")
   (unless sea-anthropic-key
     (user-error "ANTHROPIC_API_KEY not set"))
+
+  ;; Check directories exist
+  (unless (and (file-exists-p sea-requests-dir)
+               (file-exists-p sea-logs-dir))
+    (sea-init))
 
   (if (string-match-p "Update.*self" input)
       (sea-self-evolve

@@ -1,5 +1,5 @@
 #!/bin/bash
-# Time-stamp: "2024-12-01 21:17:05 (ywatanabe)"
+# Time-stamp: "2024-12-01 22:01:27 (ywatanabe)"
 # File: ./self-evolving-agent/docs/install.sh
 
 set -euo pipefail
@@ -79,23 +79,40 @@ EOF
     log_msg "Git configuration completed"
 }
 
+
+
 setup_github_token() {
     log_msg "Setting up GitHub token..."
 
     local token_file="$CONFIG_DIR/github-token"
     local token=""
+    local default_token=""
 
-    while [[ -z "$token" ]]; do
-        read -p "Enter GitHub Personal Access Token: " -r token
-        if [[ ${#token} -lt 40 ]]; then
-            log_msg "Error: Invalid token length. Please enter a valid token."
-            token=""
+    if [[ -f "$token_file" ]]; then
+        default_token=$(sudo cat "$token_file")
+        read -p "Enter GitHub Personal Access Token (press Enter to keep existing, 's' to skip): " -r token
+        if [[ -z "$token" ]]; then
+            log_msg "Keeping existing token"
+            return 0
+        elif [[ "$token" == "s" ]]; then
+            log_msg "Skipping GitHub token setup"
+            return 0
         fi
-    done
+    else
+        read -p "Enter GitHub Personal Access Token (press Enter to skip): " -r token
+        if [[ -z "$token" ]]; then
+            log_msg "Skipping GitHub token setup"
+            return 0
+        fi
+    fi
+
+    if [[ ${#token} -lt 40 ]]; then
+        log_msg "Error: Invalid token length. Skipping token setup."
+        return 1
+    fi
 
     echo "$token" | sudo -u sea tee "$token_file" > /dev/null
     sudo chmod 600 "$token_file"
-
     log_msg "GitHub token saved to $token_file"
 }
 
@@ -116,6 +133,26 @@ setup_workspace() {
 }
 
 
+# Add this new function after setup_workspace:
+setup_source_permissions() {
+    local main_user=$1
+    local source_dir="/home/$main_user/.dotfiles/.emacs.d/lisp/self-evolving-agent"
+
+    log_msg "Setting up source directory permissions..."
+
+    # Make directories writable for owner and group
+    sudo chmod -R 775 "$source_dir"
+
+    # Set group ownership to sea
+    sudo chgrp -R sea "$source_dir"
+
+    # Set SGID bit on directories to maintain group ownership
+    sudo find "$source_dir" -type d -exec chmod g+s {} \;
+
+    # Make files writable for owner and group
+    sudo find "$source_dir" -type f -exec chmod 664 {} \;
+}
+
 
 setup_codebase_access() {
     local main_user=$1
@@ -128,19 +165,20 @@ setup_codebase_access() {
     if [[ ! -d "$source_dir" ]]; then
         log_msg "Error: Source directory $source_dir not found"
         exit 1
-    }
+    fi
 
-    # Create symlink to source
-    sudo -u sea ln -sf "$source_dir" "$target_dir"
+    # Remove existing target if any
+    sudo rm -f "$target_dir"
+
+    # Create symlink with sudo as sea user
+    sudo -u sea ln -sf "$source_dir" "$target_dir" || {
+        log_msg "Error: Failed to create symlink"
+        exit 1
+    }
 
     # Set appropriate permissions
     sudo chmod -R g+r "$source_dir"
     sudo chgrp -R sea "$source_dir"
-
-    # This is dangerous; as this will loose working sea and stop self-evolving
-    # # Add write permissions for sea group
-    # sudo chown -R :sea "$source_dir"
-    # sudo chmod -R g+w "$source_dir"
 
     # Make specific directories writable for sea user
     local writable_dirs=("src" "docs")
@@ -205,6 +243,7 @@ main() {
     setup_workspace
     setup_github_token
     setup_sea_git_config
+    setup_source_permissions "$main_user"
     setup_codebase_access "$main_user"
     verify_setup "$main_user"
 
