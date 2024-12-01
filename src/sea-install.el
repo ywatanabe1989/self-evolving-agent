@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-02 07:14:09
-;;; Time-stamp: <2024-12-02 07:14:09 (ywatanabe)>
+;;; Author: 2024-12-02 07:27:18
+;;; Time-stamp: <2024-12-02 07:27:18 (ywatanabe)>
 ;;; File: ./self-evolving-agent/src/sea-install.el
 
 
@@ -22,9 +22,9 @@
 (require 'sea-config)
 (require 'cl-lib)
 (require 'auth-source)
+(require 'sea-verify-installation)
 
-
-(defvar sea--installation-log-file (expand-file-name "setup-sea.log" sea-logs-dir)
+(defvar sea--installation-log-file (expand-file-name "installation.log" sea-logs-dir)
   "Log file for SEA installation.")
 
 (defun sea--log-message (message)
@@ -42,7 +42,7 @@
 
 (defun sea--check-dependencies ()
   "Check if required system dependencies are available."
-  (let ((required-commands '("git" "sudo" "python3" "pip3"))
+  (let ((required-commands '("git" "sudo" "python3"))
         (missing-commands '()))
 
     (dolist (cmd required-commands)
@@ -137,7 +137,42 @@
     (shell-command (format "sudo chmod 600 %s" gitignore))
     (sea--log-message "Git configuration completed")))
 
-(defun sea--setup-github-token ()
+;; (defun sea--setup-github-token ()
+;;   "Set up GitHub token interactively."
+;;   (sea--log-message "Setting up GitHub token...")
+
+;;   (when (file-exists-p sea-github-token-file)
+;;     (let* ((default-token (with-temp-buffer
+;;                            (insert-file-contents sea-github-token-file)
+;;                            (buffer-string)))
+;;            (masked-token (concat (substring default-token 0 4)
+;;                                "..."
+;;                                (substring default-token -4))))
+;;       (let ((input (read-string
+;;                    (format "Enter GitHub Token (Enter for %s, s to skip): "
+;;                           masked-token))))
+;;         (cond ((string-empty-p input)
+;;                (sea--log-message "Keeping existing token")
+;;                (cl-return-from sea--setup-github-token t))
+;;               ((string= input "s")
+;;                (sea--log-message "Skipping token setup")
+;;                (cl-return-from sea--setup-github-token t))))))
+
+;;   (let ((token (read-string "Enter GitHub Personal Access Token (s to skip): ")))
+;;     (when (string= token "s")
+;;       (sea--log-message "Skipping token setup")
+;;       (cl-return-from sea--setup-github-token t))
+
+;;     (when (< (length token) 40)
+;;       (sea--log-message "Error: Invalid token length")
+;;       (cl-return-from sea--setup-github-token nil))
+
+;;     (with-temp-file sea-github-token-file
+;;       (insert token))
+;;     (shell-command (format "sudo chmod 600 %s" sea-github-token-file))
+;;     (sea--log-message "GitHub token saved")))
+
+(cl-defun sea--setup-github-token ()
   "Set up GitHub token interactively."
   (sea--log-message "Setting up GitHub token...")
 
@@ -172,29 +207,88 @@
     (shell-command (format "sudo chmod 600 %s" sea-github-token-file))
     (sea--log-message "GitHub token saved")))
 
+
+
 (defun sea--install-dependencies ()
   "Install required system packages and Emacs packages."
   (sea--log-message "Installing dependencies...")
 
   ;; System packages
-  (let ((packages '("python3" "python3-pip" "curl" "wget")))
+  (let ((packages '("python3" "curl" "wget")))
     (dolist (pkg packages)
       (unless (zerop (shell-command (format "which %s >/dev/null 2>&1" pkg)))
         (sea--log-message (format "Installing %s..." pkg))
-        (shell-command (format "sudo apt-get install -y %s" pkg)))))
+        (let ((result (shell-command (format "sudo apt-get install -y %s" pkg))))
+          (unless (zerop result)
+            (display-warning 'sea (format "Failed to install %s" pkg) :error))))))
 
   ;; Python packages
-  (shell-command "pip3 install --user requests beautifulsoup4 markdown")
+  (let* ((default-directory sea-workspace-dir)
+         (venv-dir (expand-file-name ".env" sea-workspace-dir)))
+    ;; Create and activate virtual environment
+    (unless (file-exists-p venv-dir)
+      (shell-command "python3 -m venv .env"))
+
+    (let ((commands
+           `(,(format "bash -c 'source %s/bin/activate && pip install --upgrade pip'" venv-dir)
+             ,(format "bash -c 'source %s/bin/activate && pip install -r %s/requirements.txt'"
+                     venv-dir sea-user-root-dir))))
+      (dolist (cmd commands)
+        (let ((result (shell-command cmd)))
+          (unless (zerop result)
+            (display-warning 'sea
+                           (format "Failed to execute command: %s" cmd)
+                           :error))))))
 
   ;; Emacs packages
-  (require 'package)
-  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-  (package-initialize)
-  (package-refresh-contents)
+  (condition-case err
+      (progn
+        (require 'package)
+        (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+        (package-initialize)
+        (package-refresh-contents)
 
-  (dolist (pkg '(markdown-mode request async))
-    (unless (package-installed-p pkg)
-      (package-install pkg))))
+        (dolist (pkg '(markdown-mode request async))
+          (unless (package-installed-p pkg)
+            (condition-case nil
+                (package-install pkg)
+              (error
+               (display-warning 'sea
+                              (format "Failed to install package: %s" pkg)
+                              :error))))))
+    (error
+     (display-warning 'sea
+                     (format "Error during Emacs package setup: %s" (error-message-string err))
+                     :error))))
+
+;; (defun sea--install-dependencies ()
+;;   "Install required system packages and Emacs packages."
+;;   (sea--log-message "Installing dependencies...")
+
+;;   ;; System packages
+;;   (let ((packages '("python3" "curl" "wget")))
+;;     (dolist (pkg packages)
+;;       (unless (zerop (shell-command (format "which %s >/dev/null 2>&1" pkg)))
+;;         (sea--log-message (format "Installing %s..." pkg))
+;;         (shell-command (format "sudo apt-get install -y %s" pkg)))))
+
+;;   ;; Python packages
+;;   (shell-command "cd sea-workspace-dir")
+;;   (shell-command "python -m pip install -U pip")
+;;   (shell-command "python -m venv .env")
+;;   (shell-command "source .env/bin/activate")
+;;   (shell-command "python -m pip install -U pip")
+;;   (shell-command (concat "python -m pip install -r " sea-user-root-dir "requirements.txt"))
+
+;;   ;; Emacs packages
+;;   (require 'package)
+;;   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+;;   (package-initialize)
+;;   (package-refresh-contents)
+
+;;   (dolist (pkg '(markdown-mode request async))
+;;     (unless (package-installed-p pkg)
+;;       (package-install pkg))))
 
 (defun sea--setup-permissions ()
   "Set correct permissions for SEA directories and files."
@@ -301,8 +395,7 @@
               (format "SEA_CONFIG=%s\n" sea-config-dir)))
     (shell-command (format "sudo chmod 644 %s" env-file))))
 
-
-(defun sea--install (&optional main-user)
+(defun sea-install (&optional main-user)
   "Install SEA system with MAIN-USER as primary user.
 If MAIN-USER is nil, use current user."
   (interactive)
@@ -333,7 +426,7 @@ If MAIN-USER is nil, use current user."
           (sea--setup-environment)
 
           ;; Final verification
-          (sea--verify-installation)
+          (sea-verify-installation)
 
           (sea--log-message "SEA installation completed successfully!")
           t)
