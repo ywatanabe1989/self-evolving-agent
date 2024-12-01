@@ -1,7 +1,7 @@
 <!-- ---
 !-- title: ./self-evolving-agent/README.md
 !-- author: ywatanabe
-!-- date: 2024-12-02 07:30:15
+!-- date: 2024-12-02 07:31:45
 !-- --- -->
 
 
@@ -27,19 +27,12 @@ git clone https://github.com/user/self-evolving-agent.git ~/.emacs.d/lisp/self-e
 3. Call the installation function
 ```elisp
 M-x sea-install
-```
-
-## Components
-
-- sea-core.el: Core agent functionality (read-only)
-- sea-network.el: Network operations
-- sea-seed.el: System initialization
-- sea-utils.el: Utility functions
-- sea-version-control.el: Version control integration
-- sea-config.el: Basic configurations
 
 ## Usage
 
 ```elisp
 M-x sea-self-evolve
 ```
+
+## Contact
+ywatanabe@alumni.u-tokyo.ac.jp
