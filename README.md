@@ -1,7 +1,7 @@
 <!-- ---
 !-- title: ./self-evolving-agent/README.md
 !-- author: ywatanabe
-!-- date: 2024-12-01 20:56:32
+!-- date: 2024-12-01 21:08:23
 !-- --- -->
 
 
@@ -31,10 +31,10 @@ cd ~/.emacs.d/lisp/self-evolving-agent
 ## Security Configuration
 
 ```elisp 
-(setq sea-workspace-dir "/opt/sea")
-(setq sea-readonly-mode t)  ; Recommended
-(setq sea-sandbox-mode t)   ; Recommended
-(setq sea-require-approval t)
+;; (setq sea-workspace-dir "/opt/sea")
+;; (setq sea-readonly-mode t)
+;; (setq sea-sandbox-mode t)
+;; (setq sea-require-approval t)
 ```
 
 ## Components

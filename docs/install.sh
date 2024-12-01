@@ -1,13 +1,10 @@
 #!/bin/bash
-# Time-stamp: "2024-12-01 20:36:34 (ywatanabe)"
+# Time-stamp: "2024-12-01 21:07:00 (ywatanabe)"
 # File: ./self-evolving-agent/docs/install.sh
 
-#!/bin/bash
-# setup-sea.sh
-# Author: ywatanabe
-# Date: $(date +"%Y-%m-%d-%H-%M")
-
+set -euo pipefail
 LOG_FILE="setup-sea.log"
+CONFIG_DIR="/home/sea/.config/sea"
 
 usage() {
     echo "Usage: $0 [-u|--user ] [-h|--help]"
@@ -25,30 +22,24 @@ log_msg() {
     echo "[$(date +"%Y-%m-%d %H:%M:%S")] $1" | tee -a "$LOG_FILE"
 }
 
-# setup_user() {
-#     local main_user=$1
+check_dependencies() {
+    local deps=("git" "sudo" "emacs")
+    for dep in "${deps[@]}"; do
+        if ! command -v "$dep" &>/dev/null; then
+            log_msg "Error: Required dependency '$dep' is not installed"
+            exit 1
+        fi
+    done
+}
 
-#     # Create sea user if not exists
-#     if ! id "sea" &>/dev/null; then
-#         log_msg "Creating sea user..."
-#         sudo useradd -r -m -d /home/sea sea
-#         sudo chmod 755 /home/sea
-#     fi
-
-#     # Configure groups
-#     log_msg "Configuring groups..."
-#     sudo usermod -aG sea "$main_user"
-#     sudo usermod -aG "$main_user" sea
-
-#     # Fix home permissions
-#     log_msg "Setting home directory permissions..."
-#     sudo chown -R sea:sea /home/sea
-# }
-
-setup_user() {
+setup_sea_user() {
     local main_user=$1
 
-    # Create sea user if not exists
+    if ! id "$main_user" &>/dev/null; then
+        log_msg "Error: User $main_user does not exist"
+        exit 1
+    fi
+
     if ! id "sea" &>/dev/null; then
         log_msg "Creating sea user..."
         sudo useradd -r -m -d /home/sea sea || {
@@ -56,43 +47,92 @@ setup_user() {
             exit 1
         }
         sudo chmod 755 /home/sea
-    else
-        # Ensure home directory exists even if user exists
-        sudo mkdir -p /home/sea || {
-            log_msg "Error: Failed to create /home/sea directory"
-            exit 1
-        }
     fi
 
-    # Configure groups
     log_msg "Configuring groups..."
     sudo usermod -aG sea "$main_user"
     sudo usermod -aG "$main_user" sea
 
-    # Fix home permissions
-    log_msg "Setting home directory permissions..."
     sudo chown -R sea:sea /home/sea
+    mkdir -p "$CONFIG_DIR"
+}
+
+setup_sea_git_config() {
+    log_msg "Setting up git configuration for sea user..."
+
+    sudo -u sea git config --global user.name "sea-bot"
+    sudo -u sea git config --global user.email "sea-bot@example.com"
+    sudo -u sea git config --global core.editor "emacs -nw"
+    sudo -u sea git config --global init.defaultBranch "main"
+
+    local gitignore="/home/sea/.gitignore_global"
+    cat << EOF | sudo -u sea tee "$gitignore" > /dev/null
+*~
+.DS_Store
+.env
+*.log
+EOF
+
+    sudo -u sea git config --global core.excludesfile "$gitignore"
+    sudo chmod 644 "$gitignore"
+
+    log_msg "Git configuration completed"
+}
+
+setup_github_token() {
+    log_msg "Setting up GitHub token..."
+
+    local token_file="$CONFIG_DIR/github-token"
+    local token=""
+
+    while [[ -z "$token" ]]; do
+        read -p "Enter GitHub Personal Access Token: " -r token
+        if [[ ${#token} -lt 40 ]]; then
+            log_msg "Error: Invalid token length. Please enter a valid token."
+            token=""
+        fi
+    done
+
+    echo "$token" | sudo -u sea tee "$token_file" > /dev/null
+    sudo chmod 600 "$token_file"
+
+    log_msg "GitHub token saved to $token_file"
 }
 
 setup_workspace() {
     log_msg "Setting up workspace..."
 
-    # Create directory structure
-    sudo mkdir -p /opt/sea/{workspace,backups,logs}
+    local dirs=("workspace" "backups" "logs")
+    for dir in "${dirs[@]}"; do
+        sudo mkdir -p "/opt/sea/$dir"
+    done
+
     sudo chown -R sea:sea /opt/sea
     sudo chmod -R 2775 /opt/sea
 
-    # Configure sea user directory
-    sudo -u sea mkdir -p /home/sea/.config/sea
-    sudo -u sea touch /home/sea/.config/sea/keys.el
-    sudo chmod 600 /home/sea/.config/sea/keys.el
+    sudo -u sea mkdir -p "$CONFIG_DIR"
+    sudo -u sea touch "$CONFIG_DIR/keys.el"
+    sudo chmod 600 "$CONFIG_DIR/keys.el"
 }
 
 verify_setup() {
     log_msg "Verifying setup..."
 
+    local checks=(
+        "/opt/sea"
+        "$CONFIG_DIR/keys.el"
+        "$CONFIG_DIR/github-token"
+    )
+
+    for check in "${checks[@]}"; do
+        if [[ ! -e "$check" ]]; then
+            log_msg "Error: $check not found"
+            exit 1
+        fi
+    done
+
     ls -la /opt/sea
-    ls -la /home/sea/.config/sea/keys.el
+    ls -la "$CONFIG_DIR"
     groups sea
     groups "$1"
 }
@@ -121,8 +161,11 @@ main() {
         usage
     fi
 
-    setup_user "$main_user"
+    check_dependencies
+    setup_sea_user "$main_user"
     setup_workspace
+    setup_github_token
+    setup_sea_git_config
     verify_setup "$main_user"
 
     log_msg "Setup completed successfully"
