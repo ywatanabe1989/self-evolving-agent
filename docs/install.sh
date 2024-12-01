@@ -1,5 +1,5 @@
 #!/bin/bash
-# Time-stamp: "2024-12-01 22:01:27 (ywatanabe)"
+# Time-stamp: "2024-12-02 06:20:36 (ywatanabe)"
 # File: ./self-evolving-agent/docs/install.sh
 
 set -euo pipefail
@@ -62,7 +62,7 @@ setup_sea_git_config() {
 
     sudo -u sea git config --global user.name "sea-bot"
     sudo -u sea git config --global user.email "sea-bot@example.com"
-    sudo -u sea git config --global core.editor "emacs -nw"
+    sudo -u sea git config --global core.editor "gedit"
     sudo -u sea git config --global init.defaultBranch "main"
 
     local gitignore="/home/sea/.gitignore_global"
@@ -79,8 +79,6 @@ EOF
     log_msg "Git configuration completed"
 }
 
-
-
 setup_github_token() {
     log_msg "Setting up GitHub token..."
 
@@ -89,22 +87,46 @@ setup_github_token() {
     local default_token=""
 
     if [[ -f "$token_file" ]]; then
-        default_token=$(sudo cat "$token_file")
-        read -p "Enter GitHub Personal Access Token (press Enter to keep existing, 's' to skip): " -r token
+        default_token=$(cat "$token_file")
+        masked_default_token="${default_token:0:4}...${default_token: -4}"
+        read -p "Enter GitHub Personal Access Token (press Enter for $masked_default_token, 's' to skip): " -r token
+
         if [[ -z "$token" ]]; then
             log_msg "Keeping existing token"
             return 0
         elif [[ "$token" == "s" ]]; then
-            log_msg "Skipping GitHub token setup"
+            log_msg "Skipping token setup"
             return 0
         fi
     else
-        read -p "Enter GitHub Personal Access Token (press Enter to skip): " -r token
-        if [[ -z "$token" ]]; then
-            log_msg "Skipping GitHub token setup"
+        read -p "Enter GitHub Personal Access Token ('s' to skip): " -r token
+        if [[ "$token" == "s" ]]; then
+            log_msg "Skipping token setup"
             return 0
         fi
     fi
+
+    # if [[ -f "$token_file" ]]; then
+    #     default_token=$(sudo cat "$token_file")
+    #     masked_default_token="${default_token:0:4}...${default_token: -4}"
+    #     if masked_default_token:
+    #     read -p "Enter GitHub Personal Access Token (press Enter $masked_default_token, 's' to skip): " -r token
+    #     else:
+    #     read -p "Enter GitHub Personal Access Token ('s' to skip): " -r token
+    #     if [[ -z "$token" ]]; then
+    #         log_msg "Keeping existing token"
+    #         return 0
+    #     elif [[ "$token" == "s" ]]; then
+    #         log_msg "Skipping GitHub token setup"
+    #         return 0
+    #     fi
+    # else
+    #     read -p "Enter GitHub Personal Access Token (press Enter to skip): " -r token
+    #     if [[ -z "$token" ]]; then
+    #         log_msg "Skipping GitHub token setup"
+    #         return 0
+    #     fi
+    # fi
 
     if [[ ${#token} -lt 40 ]]; then
         log_msg "Error: Invalid token length. Skipping token setup."
@@ -116,21 +138,21 @@ setup_github_token() {
     log_msg "GitHub token saved to $token_file"
 }
 
-setup_workspace() {
-    log_msg "Setting up workspace..."
+# setup_workspace() {
+#     log_msg "Setting up workspace..."
 
-    local dirs=("workspace" "backups" "logs")
-    for dir in "${dirs[@]}"; do
-        sudo mkdir -p "/opt/sea/$dir"
-    done
+#     local dirs=("workspace" "backups" "logs")
+#     for dir in "${dirs[@]}"; do
+#         sudo mkdir -p "/opt/sea/$dir"
+#     done
 
-    sudo chown -R sea:sea /opt/sea
-    sudo chmod -R 2775 /opt/sea
+#     sudo chown -R sea:sea /opt/sea
+#     sudo chmod -R 2775 /opt/sea
 
-    sudo -u sea mkdir -p "$CONFIG_DIR"
-    sudo -u sea touch "$CONFIG_DIR/keys.el"
-    sudo chmod 600 "$CONFIG_DIR/keys.el"
-}
+#     sudo -u sea mkdir -p "$CONFIG_DIR"
+#     sudo -u sea touch "$CONFIG_DIR/keys.el"
+#     sudo chmod 600 "$CONFIG_DIR/keys.el"
+# }
 
 
 # Add this new function after setup_workspace:
@@ -154,65 +176,65 @@ setup_source_permissions() {
 }
 
 
-setup_codebase_access() {
-    local main_user=$1
-    local source_dir="/home/$main_user/.dotfiles/.emacs.d/lisp/self-evolving-agent"
-    local target_dir="/opt/sea/workspace/self-evolving-agent"
+# setup_codebase_access() {
+#     local main_user=$1
+#     local source_dir="/home/$main_user/.dotfiles/.emacs.d/lisp/self-evolving-agent"
+#     local target_dir="/opt/sea/workspace/self-evolving-agent"
 
-    log_msg "Setting up codebase access..."
+#     log_msg "Setting up codebase access..."
 
-    # Check if source directory exists
-    if [[ ! -d "$source_dir" ]]; then
-        log_msg "Error: Source directory $source_dir not found"
-        exit 1
-    fi
+#     # Check if source directory exists
+#     if [[ ! -d "$source_dir" ]]; then
+#         log_msg "Error: Source directory $source_dir not found"
+#         exit 1
+#     fi
 
-    # Remove existing target if any
-    sudo rm -f "$target_dir"
+#     # Remove existing target if any
+#     sudo rm -f "$target_dir"
 
-    # Create symlink with sudo as sea user
-    sudo -u sea ln -sf "$source_dir" "$target_dir" || {
-        log_msg "Error: Failed to create symlink"
-        exit 1
-    }
+#     # Create symlink with sudo as sea user
+#     sudo -u sea ln -sf "$source_dir" "$target_dir" || {
+#         log_msg "Error: Failed to create symlink"
+#         exit 1
+#     }
 
-    # Set appropriate permissions
-    sudo chmod -R g+r "$source_dir"
-    sudo chgrp -R sea "$source_dir"
+#     # Set appropriate permissions
+#     sudo chmod -R g+r "$source_dir"
+#     sudo chgrp -R sea "$source_dir"
 
-    # Make specific directories writable for sea user
-    local writable_dirs=("src" "docs")
-    for dir in "${writable_dirs[@]}"; do
-        if [[ -d "$source_dir/$dir" ]]; then
-            sudo chmod -R g+w "$source_dir/$dir"
-        fi
-    done
+#     # Make specific directories writable for sea user
+#     local writable_dirs=("src" "docs")
+#     for dir in "${writable_dirs[@]}"; do
+#         if [[ -d "$source_dir/$dir" ]]; then
+#             sudo chmod -R g+w "$source_dir/$dir"
+#         fi
+#     done
 
-    log_msg "Codebase access configured at $target_dir"
-}
+#     log_msg "Codebase access configured at $target_dir"
+# }
 
-verify_setup() {
-    log_msg "Verifying setup..."
+# verify_setup() {
+#     log_msg "Verifying setup..."
 
-    local checks=(
-        "/opt/sea"
-        "$CONFIG_DIR/keys.el"
-        "$CONFIG_DIR/github-token"
-        "/opt/sea/workspace/self-evolving-agent"
-    )
+#     local checks=(
+#         "/opt/sea"
+#         "$CONFIG_DIR/keys.el"
+#         "$CONFIG_DIR/github-token"
+#         "/opt/sea/workspace/self-evolving-agent"
+#     )
 
-    for check in "${checks[@]}"; do
-        if [[ ! -e "$check" ]]; then
-            log_msg "Error: $check not found"
-            exit 1
-        fi
-    done
+#     for check in "${checks[@]}"; do
+#         if [[ ! -e "$check" ]]; then
+#             log_msg "Error: $check not found"
+#             exit 1
+#         fi
+#     done
 
-    ls -la /opt/sea
-    ls -la "$CONFIG_DIR"
-    groups sea
-    groups "$1"
-}
+#     ls -la /opt/sea
+#     ls -la "$CONFIG_DIR"
+#     groups sea
+#     groups "$1"
+# }
 
 main() {
     local main_user=""
@@ -240,11 +262,11 @@ main() {
 
     check_dependencies
     setup_sea_user "$main_user"
-    setup_workspace
+    # setup_workspace
     setup_github_token
     setup_sea_git_config
-    setup_source_permissions "$main_user"
-    setup_codebase_access "$main_user"
+    # setup_source_permissions "$main_user"
+    # setup_codebase_access "$main_user"
     verify_setup "$main_user"
 
     log_msg "Setup completed successfully"

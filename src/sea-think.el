@@ -1,10 +1,9 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-01 23:21:36
-;;; Time-stamp: <2024-12-01 23:21:36 (ywatanabe)>
-;;; File: ./self-evolving-agent/src/sea-core.el
+;;; Author: 2024-12-02 06:49:51
+;;; Time-stamp: <2024-12-02 06:49:51 (ywatanabe)>
+;;; File: ./self-evolving-agent/src/sea-think.el
 
 
-;;; Commentary:
 ;; Core functionality for self-evolving agent
 
 ;;; Code:
@@ -84,41 +83,7 @@ INPUT is the task description or command for the agent."
     (error
      (message "Error executing commands: %S" err))))
 
-(defun sea--init-workspace ()
-  "Initialize SEA workspace with symbolic links."
-  (interactive)
-  (let* ((user-name (user-login-name))
-         (source-dir (directory-file-name sea-user-root-dir))
-         (workspace-dir (directory-file-name sea-workspace-dir))
-         (target-link (expand-file-name "self-evolving-agent" workspace-dir)))
 
-    ;; Verify user is in sea group
-    (unless (member "sea" (split-string (shell-command-to-string
-                                       (format "groups %s" user-name))))
-      (error "Current user must be in 'sea' group. Run install.sh first"))
-
-    ;; Create base directories
-    (dolist (dir (list sea-work-dir
-                      sea-workspace-dir
-                      sea-backups-dir
-                      sea-logs-dir
-                      sea-requests-dir
-                      sea-config-dir))
-      (unless (file-exists-p dir)
-        (make-directory dir t)
-        (set-file-modes dir #o700)))
-
-    ;; Touch request files
-    (dolist (file (list sea-user-request-file
-                       sea-request-file))
-      (unless (file-exists-p file)
-        (write-region "" nil file)))
-
-    ;; Create symbolic link
-    (when (file-exists-p target-link)
-      (delete-file target-link))
-    (make-symbolic-link source-dir target-link)))
-
-(provide 'sea-core)
+(provide 'sea-think)
 
 (message "%s was loaded." (file-name-nondirectory (or load-file-name buffer-file-name)))

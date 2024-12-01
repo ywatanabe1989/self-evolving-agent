@@ -1,8 +1,10 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-01 23:09:44
-;;; Time-stamp: <2024-12-01 23:09:44 (ywatanabe)>
+;;; Author: 2024-12-02 06:50:43
+;;; Time-stamp: <2024-12-02 06:50:43 (ywatanabe)>
 ;;; File: ./self-evolving-agent/src/sea.el
 
+
+;;(require 'sea)
 
 ;; User installation paths
 (defvar sea-user-root-dir (file-name-directory (directory-file-name
@@ -16,13 +18,24 @@
 (add-to-list 'load-path sea-user-root-dir)
 (add-to-list 'load-path sea-user-source-dir)
 
-;; Then load components in order
+;; Load base configuration first
 (require 'sea-config)
+
+;; Load components in order
+(require 'sea-install)
+(require 'sea-verify-installation)
+
+;; Check installation and run setup if needed
+(unless (sea-verify-installation)
+  (message "SEA not properly installed. Running installation...")
+  (sea-install))
+
+;; Load remaining components after ensuring installation
 (require 'sea-seed)
 (require 'sea-utils)
 (require 'sea-version-control)
 (require 'sea-network)
-(require 'sea-core)
+(require 'sea-think)
 (require 'sea-self-evolve)
 
 (provide 'sea)

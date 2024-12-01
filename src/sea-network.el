@@ -1,7 +1,7 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-01 20:23:43
-;;; Time-stamp: <2024-12-01 20:23:43 (ywatanabe)>
-;;; File: ./.dotfiles/.emacs.d/lisp/self-evolving-agent/network.el
+;;; Author: 2024-12-02 06:49:51
+;;; Time-stamp: <2024-12-02 06:49:51 (ywatanabe)>
+;;; File: ./self-evolving-agent/src/sea-network.el
 
 
 ;;; -*- lexical-binding: t -*-
@@ -15,7 +15,7 @@
 ;;; Code:
 
 (require 'sea-seed)
-(require 'sea-core)
+(require 'sea-think)
 
 (defvar sea-server-port 8080
   "Port for agent server.")

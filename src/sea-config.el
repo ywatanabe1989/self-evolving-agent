@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-01 22:55:15
-;;; Time-stamp: <2024-12-01 22:55:15 (ywatanabe)>
+;;; Author: 2024-12-02 06:50:17
+;;; Time-stamp: <2024-12-02 06:50:17 (ywatanabe)>
 ;;; File: ./self-evolving-agent/src/sea-config.el
 
 
@@ -58,11 +58,6 @@
 ;; Operation modes
 (defcustom sea-readonly-mode t
   "When non-nil, prevent modifications to core agent files."
-  :type 'boolean
-  :group 'sea)
-
-(defcustom sea-sandbox-mode t
-  "When non-nil, run operations in isolated environment."
   :type 'boolean
   :group 'sea)
 
