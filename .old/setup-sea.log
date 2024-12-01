@@ -1,0 +1,21 @@
+[2024-12-01 21:07:07] Configuring groups...
+[2024-12-01 21:07:10] Setting up workspace...
+[2024-12-01 21:07:10] Setting up GitHub token...
+Enter GitHub Personal Access Token: [2024-12-01 21:07:24] GitHub token saved to /home/sea/.config/sea/github-token
+[2024-12-01 21:07:24] Setting up git configuration for sea user...
+[2024-12-01 21:07:25] Git configuration completed
+[2024-12-01 21:07:25] Verifying setup...
+total 20
+drwxrwsr-x 5 sea  sea  4096 Dec  1 20:30 .
+drwxr-xr-x 7 root root 4096 Dec  1 20:29 ..
+drwxrwsr-x 2 sea  sea  4096 Dec  1 20:30 backups
+drwxrwsr-x 2 sea  sea  4096 Dec  1 20:30 logs
+drwxrwsr-x 2 sea  sea  4096 Dec  1 20:30 workspace
+total 12
+drwxrwxr-x 2 sea sea 4096 Dec  1 21:07 .
+drwxrwxr-x 3 sea sea 4096 Dec  1 20:36 ..
+-rw------- 1 sea sea   94 Dec  1 21:07 github-token
+-rw------- 1 sea sea    0 Dec  1 21:07 keys.el
+sea : sea ywatanabe
+ywatanabe : ywatanabe adm dialout cdrom floppy sudo audio dip video plugdev netdev docker emacs-readers emacs-agent-readonly ywatanabe-r emacs-agent sea
+[2024-12-01 21:07:25] Setup completed successfully

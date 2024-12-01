@@ -1,74 +1,46 @@
 <!-- ---
-!-- title: ./.dotfiles/.emacs.d/lisp/self-evolving-agent/README.md
+!-- title: ./self-evolving-agent/README.md
 !-- author: ywatanabe
-!-- date: 2024-12-01 20:28:38
+!-- date: 2024-12-02 00:24:02
 !-- --- -->
 
 
-# Self-Evolving Agent for Emacs
+# Self-Evolving Agent (SEA) for Emacs
 
-An Emacs package that implements a self-improving AI agent system.
+An Emacs package implementing a self-improving AI agent system.
 
-## Security & Permissions
+NOW, THIS REPOSITORY IS UNDER DEVELOPMENT.
 
-### User Setup
+## Installation
+
+1. Clone repository:
 ```bash
-# Create dedicated sea user and group
-sudo useradd -r sea
-sudo usermod -aG sea ywatanabe
-
-# Set workspace permissions
-sudo mkdir -p /opt/sea
-sudo chown -R sea:sea /opt/sea
-sudo chmod -R 2775 /opt/sea
+git clone https://github.com/user/self-evolving-agent.git ~/.emacs.d/lisp/self-evolving-agent
 ```
 
-### Emacs Configuration
-```elisp
-;; Set restricted workspace
-(setq sea-workspace-dir "/opt/sea")
+2. Run setup script:
+```bash
+cd ~/.emacs.d/lisp/self-evolving-agent
+./docs/install.sh
+```
 
-;; Enable mandatory safety measures
-(setq sea-readonly-mode t)          ; Read-only mode for core files
-(setq sea-sandbox-mode t)           ; Isolated evaluation environment
-(setq sea-require-approval t)       ; Manual approval for modifications
+3. Add to your Emacs config:
+```elisp
+(add-to-list 'load-path "~/.emacs.d/lisp/self-evolving-agent/src")
+(require 'sea)
 ```
 
 ## Components
 
-- core.el: Core agent functionality (read-only)
-- network.el: Network coordination (restricted)
-- seed.el: Basic configuration
-- utils.el: Utility functions
-- version_control.el: Git integration
+- sea-core.el: Core agent functionality (read-only)
+- sea-network.el: Network operations
+- sea-seed.el: System initialization
+- sea-utils.el: Utility functions
+- sea-version-control.el: Version control integration
+- sea-config.el: Basic configurations
 
-## Installation
-
-1. Set up permissions:
-```bash
-sudo -u sea mkdir -p /opt/sea/{backups,logs,workspace}
-sudo chmod 2775 /opt/sea/*
-```
-
-2. Install dependencies:
-```elisp
-(require 'request)
-(require 'json)
-(require 'w3m)
-```
-
-3. Configure API keys:
-```bash
-# Store keys in sea user's home
-sudo -u sea mkdir -p ~sea/.config/sea
-sudo -u sea touch ~sea/.config/sea/keys.el
-sudo chmod 600 ~sea/.config/sea/keys.el
-```
-
-## Usage (Restricted Mode)
+## Usage
 
 ```elisp
-;; All operations require explicit user approval
-(sea-self-improve "path/to/file.el") ; Prompts for confirmation
-(sea-spawn-agents '(task1 task2))    ; Runs in sandbox
+(sea-self-evolve)
 ```

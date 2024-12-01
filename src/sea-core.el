@@ -1,19 +1,14 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-01 20:22:52
-;;; Time-stamp: <2024-12-01 20:22:52 (ywatanabe)>
-;;; File: ./.dotfiles/.emacs.d/lisp/self-evolving-agent/core.el
+;;; Author: 2024-12-01 23:21:36
+;;; Time-stamp: <2024-12-01 23:21:36 (ywatanabe)>
+;;; File: ./self-evolving-agent/src/sea-core.el
 
-
-;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-01 20:21:27
-;;; Time-stamp: <2024-12-01 20:21:27 (ywatanabe)>
-;;; File: ./.dotfiles/.emacs.d/lisp/self-evolving-agent/core.el
 
 ;;; Commentary:
 ;; Core functionality for self-evolving agent
 
 ;;; Code:
-
+(require 'sea-config)
 (require 'sea-seed)
 (require 'sea-utils)
 (require 'sea-version-control)
@@ -27,6 +22,11 @@ INPUT is the task description or command for the agent."
   (interactive "sTask: ")
   (unless sea-anthropic-key
     (user-error "ANTHROPIC_API_KEY not set"))
+
+  ;; Check directories exist
+  (unless (and (file-exists-p sea-requests-dir)
+               (file-exists-p sea-logs-dir))
+    (sea-init))
 
   (if (string-match-p "Update.*self" input)
       (sea-self-evolve
@@ -62,7 +62,7 @@ INPUT is the task description or command for the agent."
                    ("anthropic-version" . "2023-06-01")))
          (data (json-encode
                 `((model . "claude-3-5-sonnet-20241022")
-                  (max_tokens . 1024)
+                  (max_tokens . 8192)
                   (messages . [((role . "user")
                               (content . ,prompt))]))))
          (response (request
@@ -83,6 +83,41 @@ INPUT is the task description or command for the agent."
       (eval (read commands))
     (error
      (message "Error executing commands: %S" err))))
+
+(defun sea--init-workspace ()
+  "Initialize SEA workspace with symbolic links."
+  (interactive)
+  (let* ((user-name (user-login-name))
+         (source-dir (directory-file-name sea-user-root-dir))
+         (workspace-dir (directory-file-name sea-workspace-dir))
+         (target-link (expand-file-name "self-evolving-agent" workspace-dir)))
+
+    ;; Verify user is in sea group
+    (unless (member "sea" (split-string (shell-command-to-string
+                                       (format "groups %s" user-name))))
+      (error "Current user must be in 'sea' group. Run install.sh first"))
+
+    ;; Create base directories
+    (dolist (dir (list sea-work-dir
+                      sea-workspace-dir
+                      sea-backups-dir
+                      sea-logs-dir
+                      sea-requests-dir
+                      sea-config-dir))
+      (unless (file-exists-p dir)
+        (make-directory dir t)
+        (set-file-modes dir #o700)))
+
+    ;; Touch request files
+    (dolist (file (list sea-user-request-file
+                       sea-request-file))
+      (unless (file-exists-p file)
+        (write-region "" nil file)))
+
+    ;; Create symbolic link
+    (when (file-exists-p target-link)
+      (delete-file target-link))
+    (make-symbolic-link source-dir target-link)))
 
 (provide 'sea-core)
 
