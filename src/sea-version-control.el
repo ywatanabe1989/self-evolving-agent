@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-01 20:54:52
-;;; Time-stamp: <2024-12-01 20:54:52 (ywatanabe)>
+;;; Author: 2024-12-01 20:59:09
+;;; Time-stamp: <2024-12-01 20:59:09 (ywatanabe)>
 ;;; File: ./self-evolving-agent/src/sea-version-control.el
 
 
@@ -31,12 +31,24 @@
   :type 'string
   :group 'sea-git)
 
-(defcustom sea-github-token nil
-  "GitHub access token for authentication.
-Must be set by user explicitly:
-(setq sea-github-token \"ghp_xxx...\")"
+(defvar sea-github-token nil
+  "GitHub access token loaded from sea-github-token-file.")
+
+(defcustom sea-github-token-file "~/.config/sea/github-token"
+  "Path to file containing GitHub token."
   :type 'string
   :group 'sea-git)
+
+(defun sea--load-github-token ()
+  "Load GitHub token from file."
+  (if (file-exists-p sea-github-token-file)
+      (with-temp-buffer
+        (insert-file-contents sea-github-token-file)
+        (string-trim (buffer-string)))
+    (error "GitHub token file not found: %s" sea-github-token-file)))
+
+;; Add to initialization:
+(setq sea-github-token (sea--load-github-token))
 
 (defun sea-self-evolve (file)
   "Update FILE with improvements suggested by LLM."

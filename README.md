@@ -1,7 +1,7 @@
 <!-- ---
 !-- title: ./self-evolving-agent/README.md
 !-- author: ywatanabe
-!-- date: 2024-12-01 20:49:57
+!-- date: 2024-12-01 20:56:32
 !-- --- -->
 
 
@@ -24,7 +24,7 @@ cd ~/.emacs.d/lisp/self-evolving-agent
 
 3. Add to your Emacs config:
 ```elisp
-(add-to-list 'load-path "~/.emacs.d/lisp/self-evolving-agent")
+(add-to-list 'load-path "~/.emacs.d/lisp/self-evolving-agent/src")
 (require 'sea)
 ```
 
@@ -49,6 +49,9 @@ cd ~/.emacs.d/lisp/self-evolving-agent
 ## Usage
 
 ```elisp
+;; Main Operation
+(sea-self-evolve)
+
 ;; Safety-first operations
 (sea-self-improve "path/to/file.el")
 (sea-spawn-agents '(task1 task2))
