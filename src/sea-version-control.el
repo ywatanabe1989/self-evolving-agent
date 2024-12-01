@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-01 21:00:03
-;;; Time-stamp: <2024-12-01 21:00:03 (ywatanabe)>
+;;; Author: 2024-12-01 21:17:15
+;;; Time-stamp: <2024-12-01 21:17:15 (ywatanabe)>
 ;;; File: ./self-evolving-agent/src/sea-version-control.el
 
 
@@ -50,17 +50,36 @@
 ;; Add to initialization:
 (setq sea-github-token (sea--load-github-token))
 
+
 (defun sea-self-evolve (file)
   "Update FILE with improvements suggested by LLM."
   (unless sea-github-token
     (error "GitHub token not set. Please set sea-github-token"))
-  (let ((backup (sea--create-backup file)))
+
+  ;; Work with copy in sea workspace
+  (let* ((workspace-dir "/opt/sea/workspace/self-evolving-agent")
+         (relative-path (file-relative-name file "/home/ywatanabe/.dotfiles/.emacs.d/lisp/self-evolving-agent"))
+         (work-file (expand-file-name relative-path workspace-dir))
+         (backup-file (sea--create-backup work-file)))
+
+    ;; Ensure workspace exists
+    (make-directory (file-name-directory work-file) t)
+
+    ;; Copy original to workspace
+    (copy-file file work-file t)
+
+    ;; Generate improvements on work file
     (sea-think
-     (format "Review and improve %s" file))
-    (sea--update-timestamp)
-    (when (file-exists-p backup)
-      (let ((changes (sea--diff-files backup file)))
-        (sea--log-change file backup changes)))))
+     (format "Review and improve %s" work-file))
+
+    ;; Update timestamp in work file
+    (with-current-buffer (find-file-noselect work-file)
+      (sea--update-timestamp)
+      (save-buffer))
+
+    (when (file-exists-p backup-file)
+      (let ((changes (sea--diff-files backup-file work-file)))
+        (sea--log-change work-file backup-file changes)))))
 
 (defun sea--ensure-not-main ()
   "Ensure we're not on main branch."

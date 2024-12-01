@@ -1,5 +1,5 @@
 #!/bin/bash
-# Time-stamp: "2024-12-01 21:12:42 (ywatanabe)"
+# Time-stamp: "2024-12-01 21:17:05 (ywatanabe)"
 # File: ./self-evolving-agent/docs/install.sh
 
 set -euo pipefail
@@ -136,6 +136,11 @@ setup_codebase_access() {
     # Set appropriate permissions
     sudo chmod -R g+r "$source_dir"
     sudo chgrp -R sea "$source_dir"
+
+    # This is dangerous; as this will loose working sea and stop self-evolving
+    # # Add write permissions for sea group
+    # sudo chown -R :sea "$source_dir"
+    # sudo chmod -R g+w "$source_dir"
 
     # Make specific directories writable for sea user
     local writable_dirs=("src" "docs")
