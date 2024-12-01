@@ -1,5 +1,5 @@
 #!/bin/bash
-# Time-stamp: "2024-12-01 21:07:00 (ywatanabe)"
+# Time-stamp: "2024-12-01 21:12:42 (ywatanabe)"
 # File: ./self-evolving-agent/docs/install.sh
 
 set -euo pipefail
@@ -115,6 +115,39 @@ setup_workspace() {
     sudo chmod 600 "$CONFIG_DIR/keys.el"
 }
 
+
+
+setup_codebase_access() {
+    local main_user=$1
+    local source_dir="/home/$main_user/.dotfiles/.emacs.d/lisp/self-evolving-agent"
+    local target_dir="/opt/sea/workspace/self-evolving-agent"
+
+    log_msg "Setting up codebase access..."
+
+    # Check if source directory exists
+    if [[ ! -d "$source_dir" ]]; then
+        log_msg "Error: Source directory $source_dir not found"
+        exit 1
+    }
+
+    # Create symlink to source
+    sudo -u sea ln -sf "$source_dir" "$target_dir"
+
+    # Set appropriate permissions
+    sudo chmod -R g+r "$source_dir"
+    sudo chgrp -R sea "$source_dir"
+
+    # Make specific directories writable for sea user
+    local writable_dirs=("src" "docs")
+    for dir in "${writable_dirs[@]}"; do
+        if [[ -d "$source_dir/$dir" ]]; then
+            sudo chmod -R g+w "$source_dir/$dir"
+        fi
+    done
+
+    log_msg "Codebase access configured at $target_dir"
+}
+
 verify_setup() {
     log_msg "Verifying setup..."
 
@@ -122,6 +155,7 @@ verify_setup() {
         "/opt/sea"
         "$CONFIG_DIR/keys.el"
         "$CONFIG_DIR/github-token"
+        "/opt/sea/workspace/self-evolving-agent"
     )
 
     for check in "${checks[@]}"; do
@@ -166,6 +200,7 @@ main() {
     setup_workspace
     setup_github_token
     setup_sea_git_config
+    setup_codebase_access "$main_user"
     verify_setup "$main_user"
 
     log_msg "Setup completed successfully"
