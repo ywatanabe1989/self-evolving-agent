@@ -1,7 +1,7 @@
 <!-- ---
 !-- title: ./self-evolving-agent/README.md
 !-- author: ywatanabe
-!-- date: 2024-12-02 00:24:02
+!-- date: 2024-12-02 07:31:45
 !-- --- -->
 
 
@@ -18,29 +18,21 @@ NOW, THIS REPOSITORY IS UNDER DEVELOPMENT.
 git clone https://github.com/user/self-evolving-agent.git ~/.emacs.d/lisp/self-evolving-agent
 ```
 
-2. Run setup script:
-```bash
-cd ~/.emacs.d/lisp/self-evolving-agent
-./docs/install.sh
-```
-
-3. Add to your Emacs config:
+2. Add to your Emacs config:
 ```elisp
 (add-to-list 'load-path "~/.emacs.d/lisp/self-evolving-agent/src")
 (require 'sea)
 ```
 
-## Components
-
-- sea-core.el: Core agent functionality (read-only)
-- sea-network.el: Network operations
-- sea-seed.el: System initialization
-- sea-utils.el: Utility functions
-- sea-version-control.el: Version control integration
-- sea-config.el: Basic configurations
+3. Call the installation function
+```elisp
+M-x sea-install
 
 ## Usage
 
 ```elisp
-(sea-self-evolve)
+M-x sea-self-evolve
 ```
+
+## Contact
+ywatanabe@alumni.u-tokyo.ac.jp

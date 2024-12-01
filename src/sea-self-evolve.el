@@ -1,13 +1,13 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-01 23:16:33
-;;; Time-stamp: <2024-12-01 23:16:33 (ywatanabe)>
+;;; Author: 2024-12-02 06:49:51
+;;; Time-stamp: <2024-12-02 06:49:51 (ywatanabe)>
 ;;; File: ./self-evolving-agent/src/sea-self-evolve.el
 
 
 (require 'sea-seed)
 (require 'sea-config)
 (require 'sea-utils)
-(require 'sea-core)
+(require 'sea-think)
 
 
 (defun sea-self-evolve (&optional file)
@@ -102,5 +102,6 @@ If FILE is nil, use sea source directory."
 ;;           (sea--log-change work-file backup-file changes))))))
 ; (sea-self-evolve)
 
+(provide 'sea-self-evolve)
 
 (message "%s was loaded." (file-name-nondirectory (or load-file-name buffer-file-name)))
