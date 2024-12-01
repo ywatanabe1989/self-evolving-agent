@@ -1,13 +1,15 @@
 <!-- ---
 !-- title: ./self-evolving-agent/README.md
 !-- author: ywatanabe
-!-- date: 2024-12-01 22:30:31
+!-- date: 2024-12-02 00:24:02
 !-- --- -->
 
 
 # Self-Evolving Agent (SEA) for Emacs
 
 An Emacs package implementing a self-improving AI agent system.
+
+NOW, THIS REPOSITORY IS UNDER DEVELOPMENT.
 
 ## Installation
 
@@ -28,18 +30,6 @@ cd ~/.emacs.d/lisp/self-evolving-agent
 (require 'sea)
 ```
 
-## Security Configuration
-
-```elisp 
-;; (setq sea-github-token-file "~/.config/sea/github-token")
-;; (setq sea-github-token-file "~/.config/sea/user-request")
-;; (setq sea-github-token-file "~/.config/sea/seq-suggestion")
-;; (setq sea-workspace-dir "/opt/sea")
-;; (setq sea-readonly-mode t)
-;; (setq sea-sandbox-mode t)
-;; (setq sea-require-approval t)
-```
-
 ## Components
 
 - sea-core.el: Core agent functionality (read-only)
@@ -52,10 +42,5 @@ cd ~/.emacs.d/lisp/self-evolving-agent
 ## Usage
 
 ```elisp
-;; Main Operation
 (sea-self-evolve)
-
-;; Safety-first operations
-(sea-self-improve "path/to/file.el")
-(sea-spawn-agents '(task1 task2))
 ```

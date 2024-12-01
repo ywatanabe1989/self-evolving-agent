@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-01 22:26:25
-;;; Time-stamp: <2024-12-01 22:26:25 (ywatanabe)>
+;;; Author: 2024-12-01 23:09:44
+;;; Time-stamp: <2024-12-01 23:09:44 (ywatanabe)>
 ;;; File: ./self-evolving-agent/src/sea.el
 
 
@@ -23,6 +23,7 @@
 (require 'sea-version-control)
 (require 'sea-network)
 (require 'sea-core)
+(require 'sea-self-evolve)
 
 (provide 'sea)
 
