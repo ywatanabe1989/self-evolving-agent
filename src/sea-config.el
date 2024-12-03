@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-04 00:36:31
-;;; Time-stamp: <2024-12-04 00:36:31 (ywatanabe)>
+;;; Author: 2024-12-04 02:25:39
+;;; Time-stamp: <2024-12-04 02:25:39 (ywatanabe)>
 ;;; File: ./self-evolving-agent/src/sea-config.el
 
 
@@ -17,8 +17,26 @@
 (defvar sea--sudo-password nil
   "Temporary storage for sudo password.")
 
+(defvar sea-context nil
+  "Current context of the agent.")
+
+(defvar sea-max-retries 1
+  "Maximum number of retries for failed execution.")
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Base directories
+;; Base directories for the user; defined in sea-config.el and thus commented-out here
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ;; User installation paths
+;; (defvar sea-user-root-dir (file-name-directory (directory-file-name
+;;                                               (file-name-directory
+;;                                                (or load-file-name buffer-file-name))))
+;;   "User's SEA installation root directory.")
+
+;; (defvar sea-user-source-dir (expand-file-name "src" sea-user-root-dir)
+;;   "User's SEA source directory.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Base directories for the SEA user
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defcustom sea-user "sea"
   "SEA system user name."
@@ -46,23 +64,6 @@
 (defvar sea-requests-dir (expand-file-name "requests" sea-work-dir))
 (defvar sea-config-dir (expand-file-name "config" sea-work-dir))
 
-;; (defvar sea-workspace-dir (expand-file-name "workspace" sea-work-dir)
-;;   "Directory for main SEA operations.")
-
-;; (defvar sea-source-dir (expand-file-name "self-evolving-agent/src" sea-workspace-dir)
-;;   "Directory for main SEA operations.")
-
-;; (defvar sea-backups-dir (expand-file-name "backups" sea-work-dir)
-;;   "Directory for backup files.")
-
-;; (defvar sea-logs-dir (expand-file-name "logs" sea-work-dir)
-;;   "Directory for log files.")
-
-;; (defvar sea-requests-dir (expand-file-name "requests" sea-work-dir)
-;;   "Directory for improvement requests.")
-
-;; (defvar sea-config-dir (expand-file-name "config" sea-work-dir)
-;;   "Directory for configuration files.")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Server
@@ -109,6 +110,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; User Interaction
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defcustom sea-prompt-dir (expand-file-name "user-request.md" sea-requests-dir)
+  "File for user's improvement requests."
+  :type 'file
+  :group 'sea)
+
 (defcustom sea-user-request-file (expand-file-name "user-request.md" sea-requests-dir)
   "File for user's improvement requests."
   :type 'file
