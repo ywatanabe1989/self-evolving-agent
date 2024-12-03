@@ -1,7 +1,7 @@
 <!-- ---
 !-- title: ./self-evolving-agent/README.md
 !-- author: ywatanabe
-!-- date: 2024-12-04 07:25:04
+!-- date: 2024-12-04 07:27:56
 !-- --- -->
 
 
@@ -94,7 +94,10 @@ M-x sea-self-evolve
 (sea-run "make a new buffer and say hi") ; working
 
 (sea-run "open a new buffer and write a welcome message, hello world as an ASCII art")
-;; (progn (generate-new-buffer *hello*) (switch-to-buffer *hello*) (insert Hi there!))
+
+
+(sea-run "change the emacs appearance to cool, modern looks")
+(sea-run "change the emacs appearance to cool, modern looks; use a cool theme after installation")
 
 
 ;; (sea-exec-elisp-code '(message "hello!!")) # this works
