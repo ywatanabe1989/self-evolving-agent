@@ -1,7 +1,7 @@
 <!-- ---
 !-- title: ./self-evolving-agent/README.md
 !-- author: ywatanabe
-!-- date: 2024-12-04 05:06:21
+!-- date: 2024-12-04 05:54:00
 !-- --- -->
 
 
@@ -66,10 +66,17 @@ M-x sea-self-evolve
   "'\(message \"%s\" \(\+ 2 3\)\)'")
 ```
 
-## Converts Natural Language into elisp functions in a strict JSON format
-./self-evolving-agent/src/prompts/language2elisp.md
+## Converts Natural Language into elisp code
 
-(sea-load-markdown-file (expand-file-name "language2elisp.md" sea-prompts-dir))
+``` elisp
+(sea--prompt-to-elisp "hello world")
+"(insert \"\\\"hello world\\\"\")
+(newline )"
+```
+
+## Run Natural Language Task on Emacs run by SEA
+(sea--exec-elisp-code (sea--prompt-to-elisp "open a new buffer and write a welcome message, hello world as an ASCII art"))
+
 
 
 ## 

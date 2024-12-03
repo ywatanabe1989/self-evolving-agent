@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-04 05:05:30
-;;; Time-stamp: <2024-12-04 05:05:30 (ywatanabe)>
+;;; Author: 2024-12-04 05:58:17
+;;; Time-stamp: <2024-12-04 05:58:17 (ywatanabe)>
 ;;; File: ./self-evolving-agent/src/sea-config.el
 
 
@@ -150,6 +150,9 @@
 
 (defvar sea-anthropic-key (getenv "ANTHROPIC_API_KEY")
   "API key for Anthropic Claude.")
+
+(defvar sea-anthropic-engine (getenv "ANTHROPIC_ENGINE")
+  "Model for Anthropic Claude.")
 
 (defvar sea-debug nil
   "Enable debug logging when non-nil.")
