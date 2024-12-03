@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-03 23:59:21
-;;; Time-stamp: <2024-12-03 23:59:21 (ywatanabe)>
+;;; Author: 2024-12-04 00:36:31
+;;; Time-stamp: <2024-12-04 00:36:31 (ywatanabe)>
 ;;; File: ./self-evolving-agent/src/sea-config.el
 
 
@@ -28,12 +28,6 @@
 (defvar sea-uid
   (string-to-number (shell-command-to-string (format "id -u %s" sea-user)))
   "User ID of SEA system user.")
-
-;; (defcustom sea-work-dir "~/.sea"
-;;   "SEA working directory."
-;;   :type 'directory
-;;   :group 'sea)
-
 
 (defcustom sea-work-dir (format "~/.%s" sea-user)
   "SEA working directory."
@@ -84,11 +78,11 @@
   :group 'sea)
 
 (defcustom sea-server-script-path
-  (expand-file-name "sea_server_start.sh" sea-user-source-dir)
+  (expand-file-name "sea_server_handling.sh" sea-user-source-dir)
   "Path to SEA server control script."
   :type 'string
   :group 'sea)
-;; "/home/ywatanabe/.emacs.d/lisp/self-evolving-agent/src/sea_server_start.sh"
+;; "/home/ywatanabe/.emacs.d/lisp/self-evolving-agent/src/sea_server_handling.sh"
 
 (defvar sea-server-script-output nil
   "Store output from server script calls.")

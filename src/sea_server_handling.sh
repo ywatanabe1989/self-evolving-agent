@@ -1,6 +1,6 @@
 #!/bin/bash
-# Time-stamp: "2024-12-04 00:31:04 (ywatanabe)"
-# File: ./self-evolving-agent/src/sea_server_start.sh
+# Time-stamp: "2024-12-04 00:37:51 (ywatanabe)"
+# File: ./self-evolving-agent/src/sea_server_handling.sh
 
 SEA_USER="${SEA_USER:-sea}"
 SEA_UID=$(id -u "$SEA_USER")
@@ -115,12 +115,11 @@ esac
 
 # EOF
 
-# ./src/sea_server_start.sh execute '(message "hello")'
 
-# ./src/sea_server_start.sh execute '(with-current-buffer (get-buffer-create "*test*") (insert "hello"))'
-
-
-# ./src/sea_server_start.sh execute '(progn (with-current-buffer (get-buffer-create "*test*") (insert "hello")) (switch-to-buffer "*test*"))'
+# # These are working examples
+# ./src/sea_server_handling.sh execute '(message "hello")'
+# ./src/sea_server_handling.sh execute '(with-current-buffer (get-buffer-create "*test*") (insert "hello"))'
+# ./src/sea_server_handling.sh execute '(progn (with-current-buffer (get-buffer-create "*test*") (insert "hello")) (switch-to-buffer "*test*"))'
 
 
 # EOF
