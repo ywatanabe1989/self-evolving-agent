@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-04 07:59:36
-;;; Time-stamp: <2024-12-04 07:59:36 (ywatanabe)>
+;;; Author: 2024-12-04 08:58:02
+;;; Time-stamp: <2024-12-04 08:58:02 (ywatanabe)>
 ;;; File: ./self-evolving-agent/src/sea.el
 
 
@@ -27,6 +27,8 @@
 (require 'sea-verify-installation)
 
 ;; Load remaining components after ensuring installation
+(require 'sea-context)
+(require 'sea-prompts)
 (require 'sea-mode)
 (require 'sea-utils)
 (require 'sea-version-control)

@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-04 08:17:18
-;;; Time-stamp: <2024-12-04 08:17:18 (ywatanabe)>
+;;; Author: 2024-12-04 08:58:01
+;;; Time-stamp: <2024-12-04 08:58:01 (ywatanabe)>
 ;;; File: ./self-evolving-agent/src/sea-version-control.el
 
 
@@ -10,6 +10,7 @@
 ;;; Code:
 
 (require 'sea-utils)
+(require 'sea-prompts)
 
 (defgroup sea-git nil
   "Git configuration for Self-Evolving Agent."

@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-04 08:02:25
-;;; Time-stamp: <2024-12-04 08:02:25 (ywatanabe)>
+;;; Author: 2024-12-04 08:55:00
+;;; Time-stamp: <2024-12-04 08:55:00 (ywatanabe)>
 ;;; File: ./self-evolving-agent/src/sea-config.el
 
 
@@ -90,6 +90,9 @@
 ;; sea-server-script-output’s value is
 ;; "[sudo] password for ywatanabe: Server is running
 ;; "
+
+(defvar sea-log-file (expand-file-name "sea.log" sea-logs-dir)
+  "Store output from server script calls.")
 
 (defcustom sea-server-socket-dir (format "/tmp/emacs%d" sea-uid)
   "Directory for SEA Emacs server socket.")
