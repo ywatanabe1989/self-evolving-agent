@@ -1,11 +1,9 @@
 #!/bin/bash
-# Time-stamp: "2024-12-04 00:31:04 (ywatanabe)"
+# Time-stamp: "2024-12-03 22:34:02 (ywatanabe)"
 # File: ./self-evolving-agent/src/sea_server_start.sh
 
 SEA_USER="${SEA_USER:-sea}"
-SEA_UID=$(id -u "$SEA_USER")
-SEA_EMACS_SERVER_DIR=/tmp/emacs"$SEA_UID"
-SEA_SOCKET_FILE="$SEA_EMACS_SERVER_DIR/server"
+SEA_SOCKET_NAME="${SEA_SOCKET_NAME:-sea}"
 
 # Help message
 show_help() {
@@ -14,15 +12,12 @@ SEA Server Control Script
 
 Usage:
     $0 [command] [options]
-    $0 execute "ELISP_CODE"    Execute elisp code in the server
-                              Example: $0 execute '(message "hello")'
 
 Commands:
     start       Start or connect to SEA server (default)
     stop        Stop the SEA server
     restart     Restart the SEA server
     status      Check server status
-    execute     Execute elisp command
     help        Show this help message
 
 Options:
@@ -49,9 +44,10 @@ COMMAND="${1:-start}"
 SEA_UID=$(id -u "$SEA_USER")
 SEA_EMACS_SERVER_DIR=/tmp/emacs"$SEA_UID"
 
+
 sea_kill_server() {
     if _sea_is_server_running; then
-        sudo -u "$SEA_USER" emacsclient -s "$SEA_SOCKET_FILE" -e '(kill-emacs)' && sleep 1
+        sudo -u "$SEA_USER" emacsclient --socket-name="$SEA_SOCKET_NAME" -e '(kill-emacs)' && sleep 1
         if _sea_is_server_running; then
             sudo pkill -u "$SEA_USER" && sleep 1
         fi
@@ -71,16 +67,13 @@ _sea_setup_server_dir() {
 }
 
 sea_init_server() {
-    echo "DEBUG: Initializing server"
     sea_kill_server
     _sea_setup_server_dir
-    echo "DEBUG: Starting Emacs daemon with socket: $SEA_SOCKET_FILE"
-    sudo -u "$SEA_USER" emacs --daemon
+    sudo -u "$SEA_USER" emacs --daemon="$SEA_SOCKET_NAME"
 }
 
 _sea_connect_server() {
-    echo "DEBUG: Connecting to server with socket: $SEA_SOCKET_FILE"
-    sudo -u "$SEA_USER" emacsclient -s "$SEA_SOCKET_FILE" -c
+    sudo -u "$SEA_USER" emacsclient --socket-name="$SEA_SOCKET_NAME" -c
 }
 
 sea_init_or_connect() {
@@ -100,27 +93,9 @@ case "$COMMAND" in
     stop)    sea_kill_server ;;
     restart) sea_kill_server && sea_init_or_connect ;;
     status)  _sea_is_server_running && echo "Server is running" || echo "Server is not running" ;;
-    execute)
-        if _sea_is_server_running; then
-            sudo -u "$SEA_USER" emacsclient -s "$SEA_SOCKET_FILE" -e "$2"
-        else
-            echo "Server is not running"
-            exit 1
-        fi
-        ;;
     help)    show_help ;;
     *)       show_help ;;
 esac
-
-
-# EOF
-
-# ./src/sea_server_start.sh execute '(message "hello")'
-
-# ./src/sea_server_start.sh execute '(with-current-buffer (get-buffer-create "*test*") (insert "hello"))'
-
-
-# ./src/sea_server_start.sh execute '(progn (with-current-buffer (get-buffer-create "*test*") (insert "hello")) (switch-to-buffer "*test*"))'
 
 
 # EOF

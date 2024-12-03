@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-03 23:34:28
-;;; Time-stamp: <2024-12-03 23:34:28 (ywatanabe)>
+;;; Author: 2024-12-03 23:59:21
+;;; Time-stamp: <2024-12-03 23:59:21 (ywatanabe)>
 ;;; File: ./self-evolving-agent/src/sea-config.el
 
 
@@ -34,7 +34,8 @@
 ;;   :type 'directory
 ;;   :group 'sea)
 
-(defcustom sea-work-dir (format "~/.%s" sea-user
+
+(defcustom sea-work-dir (format "~/.%s" sea-user)
   "SEA working directory."
   :type 'directory
   :group 'sea)
@@ -87,15 +88,21 @@
   "Path to SEA server control script."
   :type 'string
   :group 'sea)
+;; "/home/ywatanabe/.emacs.d/lisp/self-evolving-agent/src/sea_server_start.sh"
 
 (defvar sea-server-script-output nil
   "Store output from server script calls.")
+;; sea-server-script-output’s value is
+;; "[sudo] password for ywatanabe: Server is running
+;; "
 
 (defcustom sea-server-socket-dir (format "/tmp/emacs%d" sea-uid)
   "Directory for SEA Emacs server socket.")
+;; Its value is "/tmp/emacs999"
 
 (defcustom sea-server-socket-file (format "/tmp/emacs%d/server" sea-uid)
   "File path for SEA Emacs server socket.")
+;; Its value is "/tmp/emacs999/server"
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; GitHub
