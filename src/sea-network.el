@@ -1,13 +1,8 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-02 09:21:53
-;;; Time-stamp: <2024-12-02 09:21:53 (ywatanabe)>
+;;; Author: 2024-12-03 16:42:33
+;;; Time-stamp: <2024-12-03 16:42:33 (ywatanabe)>
 ;;; File: ./self-evolving-agent/src/sea-network.el
 
-
-;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-01 20:21:47
-;;; Time-stamp: <2024-12-01 20:21:47 (ywatanabe)>
-;;; File: ./.dotfiles/.emacs.d/lisp/self-evolving-agent/network.el
 
 ;;; Commentary:
 ;; Network functionality for self-evolving agent

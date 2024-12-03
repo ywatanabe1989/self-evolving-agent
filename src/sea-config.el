@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-02 11:45:07
-;;; Time-stamp: <2024-12-02 11:45:07 (ywatanabe)>
+;;; Author: 2024-12-03 21:18:45
+;;; Time-stamp: <2024-12-03 21:18:45 (ywatanabe)>
 ;;; File: ./self-evolving-agent/src/sea-config.el
 
 
@@ -21,9 +21,6 @@
 
 (defvar sea--sudo-password nil
   "Temporary storage for sudo password.")
-
-(defvar sea--sudo-password nil
-  "Store sudo password temporarily.")
 
 ;; Base directories
 (defcustom sea-work-dir "~/.sea"
@@ -139,9 +136,6 @@
 
 (defvar sea-backup-limit 10
   "Maximum number of backups to keep.")
-
-(defvar sea-debug nil
-  "Enable debug logging when non-nil.")
 
 (provide 'sea-config)
 
