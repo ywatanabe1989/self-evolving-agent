@@ -1,6 +1,6 @@
 #!/bin/bash
-# Time-stamp: "2024-12-04 00:37:51 (ywatanabe)"
-# File: ./self-evolving-agent/src/sea_server_handling.sh
+# Time-stamp: "2024-12-04 01:59:12 (ywatanabe)"
+# File: ./self-evolving-agent/src/sea_server.sh
 
 SEA_USER="${SEA_USER:-sea}"
 SEA_UID=$(id -u "$SEA_USER")
@@ -71,15 +71,15 @@ _sea_setup_server_dir() {
 }
 
 sea_init_server() {
-    echo "DEBUG: Initializing server"
+    # echo "DEBUG: Initializing server"
     sea_kill_server
     _sea_setup_server_dir
-    echo "DEBUG: Starting Emacs daemon with socket: $SEA_SOCKET_FILE"
+    # echo "DEBUG: Starting Emacs daemon with socket: $SEA_SOCKET_FILE"
     sudo -u "$SEA_USER" emacs --daemon
 }
 
 _sea_connect_server() {
-    echo "DEBUG: Connecting to server with socket: $SEA_SOCKET_FILE"
+    # echo "DEBUG: Connecting to server with socket: $SEA_SOCKET_FILE"
     sudo -u "$SEA_USER" emacsclient -s "$SEA_SOCKET_FILE" -c
 }
 
@@ -111,15 +111,6 @@ case "$COMMAND" in
     help)    show_help ;;
     *)       show_help ;;
 esac
-
-
-# EOF
-
-
-# # These are working examples
-# ./src/sea_server_handling.sh execute '(message "hello")'
-# ./src/sea_server_handling.sh execute '(with-current-buffer (get-buffer-create "*test*") (insert "hello"))'
-# ./src/sea_server_handling.sh execute '(progn (with-current-buffer (get-buffer-create "*test*") (insert "hello")) (switch-to-buffer "*test*"))'
 
 
 # EOF

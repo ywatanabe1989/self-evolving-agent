@@ -78,11 +78,11 @@
   :group 'sea)
 
 (defcustom sea-server-script-path
-  (expand-file-name "sea_server_handling.sh" sea-user-source-dir)
+  (expand-file-name "sea_server.sh" sea-user-source-dir)
   "Path to SEA server control script."
   :type 'string
   :group 'sea)
-;; "/home/ywatanabe/.emacs.d/lisp/self-evolving-agent/src/sea_server_handling.sh"
+;; "/home/ywatanabe/.emacs.d/lisp/self-evolving-agent/src/sea_server.sh"
 
 (defvar sea-server-script-output nil
   "Store output from server script calls.")

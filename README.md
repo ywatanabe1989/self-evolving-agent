@@ -1,13 +1,13 @@
 <!-- ---
 !-- title: ./self-evolving-agent/README.md
 !-- author: ywatanabe
-!-- date: 2024-12-02 07:39:05
+!-- date: 2024-12-04 02:01:50
 !-- --- -->
 
 
 # Self-Evolving Agent (SEA) for Emacs
 
-An Emacs package implementing a self-improving AI agent system.
+Running Emacs by an agent, just like as a human engineer.
 
 NOW, THIS REPOSITORY IS UNDER DEVELOPMENT.
 
@@ -35,5 +35,23 @@ M-x sea-install
 M-x sea-self-evolve
 ```
 
+## Working with shell script
+
+``` bash
+./src/sea_server.sh [start|stop|restart|status|execute]
+./src/sea_server.sh start &
+./src/sea_server.sh execute '(message "hello")'
+./src/sea_server.sh execute '(progn (with-current-buffer (get-buffer-create "*test*") (insert "hello")) (switch-to-buffer "*test*"))'
+```
+
+## 
 ## Contact
 ywatanabe@alumni.u-tokyo.ac.jp
+
+
+
+
+# EOF
+
+
+
