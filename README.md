@@ -1,7 +1,7 @@
 <!-- ---
 !-- title: ./self-evolving-agent/README.md
 !-- author: ywatanabe
-!-- date: 2024-12-04 07:27:56
+!-- date: 2024-12-04 07:30:53
 !-- --- -->
 
 
@@ -83,10 +83,6 @@ M-x sea-self-evolve
   "open a new buffer and write a welcome message, hello world as an ASCII art")
 )
 
-(defun sea-run (prompt)
-  (interactive)
-  (let ((elisp-code (sea--prompt-to-elisp prompt)))
-    (sea-exec-elisp-code elisp-code)))
 
 ;; (sea-exec-elisp-code '(message "hello!!")) # works
 ;; (sea-exec-elisp-code '(progn (generate-new-buffer *hello*) (switch-to-buffer *hello*) (insert Hi there!))) # not working
