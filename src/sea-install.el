@@ -1,31 +1,14 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-02 11:03:48
-;;; Time-stamp: <2024-12-02 11:03:48 (ywatanabe)>
+;;; Author: 2024-12-04 08:10:06
+;;; Time-stamp: <2024-12-04 08:10:06 (ywatanabe)>
 ;;; File: ./self-evolving-agent/src/sea-install.el
 
-
-;;; sea-install.el --- Installation script for Self-Evolving Agent  -*- lexical-binding: t; -*-
-
-;; Copyright (C) 2023-2024 Free Software Foundation, Inc.
-
-;; Author: Your Name <your.email@example.com>
-;; Version: 0.1
-;; Package-Requires: ((emacs "28.1"))
-;; Keywords: ai, automation
-;; URL: https://github.com/yourusername/self-evolving-agent
-
-;;; Commentary:
-;; Installation and setup script for Self-Evolving Agent (SEA)
-
-;;; Code:
 
 (require 'sea-config)
 (require 'cl-lib)
 (require 'auth-source)
 (require 'sea-verify-installation)
 (require 'sea-logging)
-
-
 
 
 (defun sea-setup-sudo ()

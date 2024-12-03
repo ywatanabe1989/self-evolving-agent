@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-03 22:58:32
-;;; Time-stamp: <2024-12-03 22:58:32 (ywatanabe)>
+;;; Author: 2024-12-04 08:14:11
+;;; Time-stamp: <2024-12-04 08:14:11 (ywatanabe)>
 ;;; File: ./self-evolving-agent/src/sea-utils.el
 
 
@@ -42,39 +42,6 @@
       (display-buffer buffer))))
 
 
-
-;; (defun sea--ensure-config-files ()
-;;   "Ensure SEA configuration files and directories exist."
-;;   (let ((dirs (list sea-work-dir sea-workspace-dir sea-backups-dir
-;;                     sea-logs-dir sea-requests-dir sea-config-dir
-;;                     sea-sandbox-dir))
-;;         (files (list sea-github-token-file
-;;                     sea-user-request-file
-;;                     sea-request-file)))
-
-;;     (dolist (dir dirs)
-;;       (unless (file-exists-p dir)
-;;         (condition-case err
-;;             (progn
-;;               (make-directory dir t)
-;;               (set-file-modes dir #o700))
-;;           (error (message "Failed to create directory %s: %s" dir err)))))
-
-;;     (dolist (file files)
-;;       (unless (file-exists-p file)
-;;         (condition-case err
-;;             (progn
-;;               (with-temp-file file
-;;                 (insert (cond
-;;                         ((equal file sea-user-request-file)
-;;                          "# List improvement requests here\n")
-;;                         ((equal file sea-request-file)
-;;                          "# SEA improvement suggestions\n")
-;;                         (t ""))))
-;;               (set-file-modes file #o600))
-;;           (error (message "Failed to create file %s: %s" file err)))))))
-
-
 (defun sea--create-backup (file)
   "Create backup of FILE with timestamp."
   (when (and file (file-exists-p file))
@@ -93,18 +60,6 @@
             backup-path)
         (error (message "Backup failed for %s: %s" file err) nil)))))
 
-;; (defun sea--create-backup (file)
-;;   "Create backup of FILE with timestamp."
-;;   (when (and file (file-exists-p file))
-;;     (let* ((timestamp (format-time-string "%Y%m%d-%H%M%S"))
-;;            (backup-name (format "%s_%s" timestamp (file-name-nondirectory file)))
-;;            (backup-path (expand-file-name backup-name sea-backups-dir)))
-;;       (condition-case err
-;;           (progn
-;;             (make-directory sea-backups-dir t)
-;;             (copy-file file backup-path t)
-;;             backup-path)
-;;         (error (message "Backup failed for %s: %s" file err) nil)))))
 
 (defun sea--update-timestamp ()
   "Update timestamp in file header."
