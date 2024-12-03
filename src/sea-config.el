@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-04 08:59:08
-;;; Time-stamp: <2024-12-04 08:59:08 (ywatanabe)>
+;;; Author: 2024-12-04 09:35:39
+;;; Time-stamp: <2024-12-04 09:35:39 (ywatanabe)>
 ;;; File: ./self-evolving-agent/src/sea-config.el
 
 
@@ -17,8 +17,8 @@
 (defvar sea--sudo-password nil
   "Temporary storage for sudo password.")
 
-(defvar sea-context nil
-  "Current context of the agent.")
+;; (defvar sea-context nil
+;;   "Current context of the agent.")
 
 (defvar sea-max-retries 5
   "Maximum number of retries for failed execution.")

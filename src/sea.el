@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-04 08:58:02
-;;; Time-stamp: <2024-12-04 08:58:02 (ywatanabe)>
+;;; Author: 2024-12-04 09:35:49
+;;; Time-stamp: <2024-12-04 09:35:49 (ywatanabe)>
 ;;; File: ./self-evolving-agent/src/sea.el
 
 
@@ -27,7 +27,7 @@
 (require 'sea-verify-installation)
 
 ;; Load remaining components after ensuring installation
-(require 'sea-context)
+;; (require 'sea-context)
 (require 'sea-prompts)
 (require 'sea-mode)
 (require 'sea-utils)
@@ -38,6 +38,8 @@
 (require 'sea-server)
 (require 'sea-lang2elisp)
 (require 'sea-run)
+
+(remove-hook 'after-change-functions #'genai-mode)
 
 (message "%s was loaded." (file-name-nondirectory (or load-file-name buffer-file-name)))
 
