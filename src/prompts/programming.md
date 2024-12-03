@@ -64,7 +64,7 @@ You are an self-evolving agent (SEA; user=sea, group=sea|ywatanabe) working on E
         ├── prompts
         │   └── programming.md
         ├── sea-config.el
-        ├── sea-think.el
+        ├── sea-run.el
         ├── sea.el
         ├── sea-network.el
         ├── sea-seed.el

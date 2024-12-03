@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-02 07:27:18
-;;; Time-stamp: <2024-12-02 07:27:18 (ywatanabe)>
+;;; Author: 2024-12-02 11:03:48
+;;; Time-stamp: <2024-12-02 11:03:48 (ywatanabe)>
 ;;; File: ./self-evolving-agent/src/sea-install.el
 
 
@@ -23,22 +23,34 @@
 (require 'cl-lib)
 (require 'auth-source)
 (require 'sea-verify-installation)
+(require 'sea-logging)
 
-(defvar sea--installation-log-file (expand-file-name "installation.log" sea-logs-dir)
-  "Log file for SEA installation.")
 
-(defun sea--log-message (message)
-  "Log MESSAGE with timestamp."
-  (unless (file-exists-p sea-logs-dir)
-    (make-directory sea-logs-dir t))
-  (unless (file-exists-p sea--installation-log-file)
-    (write-region "" nil sea--installation-log-file))
 
-  (let ((timestamp (format-time-string "[%Y-%m-%d %H:%M:%S]")))
-    (with-temp-buffer
-      (insert (format "%s %s\n" timestamp message))
-      (append-to-file (point-min) (point-max) sea--installation-log-file)
-      (message "%s %s" timestamp message))))
+
+(defun sea-setup-sudo ()
+  "Setup sudo configuration for SEA."
+  (interactive)
+  (let ((sudo-file "/etc/sudoers.d/sea-emacs")
+        (temp-file (make-temp-file "sea-sudo"))
+        (content (format "%s ALL=(%s) NOPASSWD: %s\n"
+                        (user-login-name)
+                        sea-user
+                        sea-emacs-cli)))
+    (write-region content nil temp-file)
+    (call-process "sudo" nil nil nil
+                 "cp" temp-file sudo-file)
+    (call-process "sudo" nil nil nil
+                 "chown" "root:root" sudo-file)
+    (call-process "sudo" nil nil nil
+                 "chmod" "440" sudo-file)
+    (delete-file temp-file)))
+
+;; (sea-setup-sudo)
+
+;; # /etc/sudoers.d/sea-emacs
+;; ywatanabe ALL=(sea) NOPASSWD: /usr/bin/emacsclient
+
 
 (defun sea--check-dependencies ()
   "Check if required system dependencies are available."
@@ -427,6 +439,8 @@ If MAIN-USER is nil, use current user."
 
           ;; Final verification
           (sea-verify-installation)
+
+          (sea-setup-sudo)
 
           (sea--log-message "SEA installation completed successfully!")
           t)

@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-02 06:50:43
-;;; Time-stamp: <2024-12-02 06:50:43 (ywatanabe)>
+;;; Author: 2024-12-02 10:56:47
+;;; Time-stamp: <2024-12-02 10:56:47 (ywatanabe)>
 ;;; File: ./self-evolving-agent/src/sea.el
 
 
@@ -20,6 +20,7 @@
 
 ;; Load base configuration first
 (require 'sea-config)
+(require 'sea-logging)
 
 ;; Load components in order
 (require 'sea-install)
@@ -30,13 +31,24 @@
   (message "SEA not properly installed. Running installation...")
   (sea-install))
 
+
+
 ;; Load remaining components after ensuring installation
-(require 'sea-seed)
+(require 'sea-mode)
 (require 'sea-utils)
 (require 'sea-version-control)
 (require 'sea-network)
-(require 'sea-think)
+(require 'sea-run)
 (require 'sea-self-evolve)
+(require 'sea-server-start)
+
+;; (sea-server-start t t)
+;; (sea-server-start)
+
+;; (login-user)
+
+(message "%s was loaded." (file-name-nondirectory (or load-file-name buffer-file-name)))
+
 
 (provide 'sea)
 

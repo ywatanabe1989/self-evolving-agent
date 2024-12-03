@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-02 07:40:22
-;;; Time-stamp: <2024-12-02 07:40:22 (ywatanabe)>
+;;; Author: 2024-12-02 11:45:07
+;;; Time-stamp: <2024-12-02 11:45:07 (ywatanabe)>
 ;;; File: ./self-evolving-agent/src/sea-config.el
 
 
@@ -19,6 +19,12 @@
   :group 'tools
   :prefix "sea-")
 
+(defvar sea--sudo-password nil
+  "Temporary storage for sudo password.")
+
+(defvar sea--sudo-password nil
+  "Store sudo password temporarily.")
+
 ;; Base directories
 (defcustom sea-work-dir "~/.sea"
   "SEA working directory."
@@ -26,6 +32,45 @@
   :group 'sea)
 
 ;; Subdirectories
+(defcustom sea-user "sea"
+  "SEA system user name."
+  :type 'string
+  :group 'sea)
+
+(defvar sea-uid
+  (string-to-number (shell-command-to-string (format "id -u %s" sea-user)))
+  "User ID of SEA system user.")
+
+(defcustom sea-home (format "/home/%s" sea-user)
+  "SEA user home directory."
+  :type 'directory
+  :group 'sea)
+
+(defcustom sea-emacs-bin "/usr/bin/emacs"
+  "Path to Emacs binary."
+  :type 'file
+  :group 'sea)
+
+(defcustom sea-emacs-cli "/usr/bin/emacsclient"
+  "Path to emacsclient binary."
+  :type 'file
+  :group 'sea)
+
+;; (defcustom sea-emacs-srv
+;;   (format "/tmp/emacs%d/server"
+;;           (string-to-number
+;;            (car (process-lines "id" "-u" sea-user))))
+;;   "Path to Emacs server socket."
+;;   :type 'file
+;;   :group 'sea)
+
+(defcustom sea-server-socket-dir (format "/tmp/emacs%d" sea-uid)
+  "Directory for SEA Emacs server socket.")
+
+(defcustom sea-server-socket-file (format "/tmp/emacs%d/server" sea-uid)
+  "File path for SEA Emacs server socket.")
+
+
 (defvar sea-workspace-dir (expand-file-name "workspace" sea-work-dir)
   "Directory for main SEA operations.")
 

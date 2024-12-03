@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-02 06:49:51
-;;; Time-stamp: <2024-12-02 06:49:51 (ywatanabe)>
+;;; Author: 2024-12-02 09:21:53
+;;; Time-stamp: <2024-12-02 09:21:53 (ywatanabe)>
 ;;; File: ./self-evolving-agent/src/sea-network.el
 
 
@@ -14,8 +14,7 @@
 
 ;;; Code:
 
-(require 'sea-seed)
-(require 'sea-think)
+(require 'sea-run)
 
 (defvar sea-server-port 8080
   "Port for agent server.")
@@ -45,7 +44,7 @@
     (when (string-match "\n" string)
       (let ((command (buffer-substring (point-min) (point-max))))
         (erase-buffer)
-        (sea-think command)))))
+        (sea-run command)))))
 
 (defun sea-spawn-agents (tasks)
   "Spawn multiple agents for TASKS."
@@ -64,7 +63,7 @@
        (format "Agent %s processing: %s"
                (sea-agent-id agent)
                (sea-agent-task agent)))
-      (sea-think (sea-agent-task agent)))))
+      (sea-run (sea-agent-task agent)))))
 
 (provide 'sea-network)
 

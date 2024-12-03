@@ -1,13 +1,12 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-02 06:49:51
-;;; Time-stamp: <2024-12-02 06:49:51 (ywatanabe)>
+;;; Author: 2024-12-02 09:21:41
+;;; Time-stamp: <2024-12-02 09:21:41 (ywatanabe)>
 ;;; File: ./self-evolving-agent/src/sea-self-evolve.el
 
 
-(require 'sea-seed)
 (require 'sea-config)
 (require 'sea-utils)
-(require 'sea-think)
+(require 'sea-run)
 
 
 (defun sea-self-evolve (&optional file)
@@ -43,7 +42,7 @@ If FILE is nil, use sea source directory."
           (add-to-list 'load-path ,sea-load-path)
           (require 'sea)
           (let ((default-directory ,default-directory))
-            (sea-think
+            (sea-run
              (format "Review and improve %s\nFocus on these aspects:\n%s"
                      ,work-file
                      ,(if (string-empty-p aspects)
@@ -86,7 +85,7 @@ If FILE is nil, use sea source directory."
 
 ;;       (copy-file file work-file t)
 
-;;       (sea-think
+;;       (sea-run
 ;;        (format "Review and improve %s\nFocus on these aspects:\n%s"
 ;;                work-file
 ;;                (if (string-empty-p aspects)

@@ -81,7 +81,7 @@ You are a self-evolving agent (SEA) run on Emacs and written in Elisp.
         ├── prompts
         │   └── programming.md
         ├── sea-config.el
-        ├── sea-think.el
+        ├── sea-run.el
         ├── sea.el
         ├── sea-network.el
         ├── sea-seed.el
