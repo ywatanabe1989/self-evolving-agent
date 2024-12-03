@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-03 21:19:40
-;;; Time-stamp: <2024-12-03 21:19:40 (ywatanabe)>
+;;; Author: 2024-12-03 22:58:32
+;;; Time-stamp: <2024-12-03 22:58:32 (ywatanabe)>
 ;;; File: ./self-evolving-agent/src/sea-utils.el
 
 
@@ -8,11 +8,11 @@
 ;; Utility functions for self-evolving agent
 
 ;;; Code:
-(defun sea--sudo ()
+(defun sea--sudo-get-password ()
   "Get sudo password once and store it."
   (interactive)
   (unless sea--sudo-password
-    (setq sea--sudo-password (read-passwd "Sudo password: ")))
+    (setq sea--sudo-get-password (read-passwd "Sudo password: ")))
   sea--sudo-password)
 
 (defun sea--shell-command (command)
