@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-04 06:28:00
-;;; Time-stamp: <2024-12-04 06:28:00 (ywatanabe)>
+;;; Author: 2024-12-04 07:59:36
+;;; Time-stamp: <2024-12-04 07:59:36 (ywatanabe)>
 ;;; File: ./self-evolving-agent/src/sea.el
 
 
@@ -35,6 +35,7 @@
 (require 'sea-self-evolve)
 (require 'sea-server)
 (require 'sea-lang2elisp)
+(require 'sea-run)
 
 (message "%s was loaded." (file-name-nondirectory (or load-file-name buffer-file-name)))
 

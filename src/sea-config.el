@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-04 06:34:09
-;;; Time-stamp: <2024-12-04 06:34:09 (ywatanabe)>
+;;; Author: 2024-12-04 08:02:25
+;;; Time-stamp: <2024-12-04 08:02:25 (ywatanabe)>
 ;;; File: ./self-evolving-agent/src/sea-config.el
 
 
@@ -148,17 +148,26 @@
   :type 'integer
   :group 'sea)
 
+(defvar sea-debug nil
+  "Enable debug logging when non-nil.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; LLM
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defvar sea-anthropic-key (getenv "ANTHROPIC_API_KEY")
   "API key for Anthropic Claude.")
 
 (defvar sea-anthropic-engine (getenv "ANTHROPIC_ENGINE")
   "Model for Anthropic Claude.")
 
-(defvar sea-debug nil
-  "Enable debug logging when non-nil.")
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Logging
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defvar sea-backup-limit 10
   "Maximum number of backups to keep.")
+
+(defvar sea--installation-log-file (expand-file-name "installation.log" sea-logs-dir)
+  "Log file for SEA installation.")
 
 (provide 'sea-config)
 
