@@ -1,7 +1,7 @@
 <!-- ---
 !-- title: ./self-evolving-agent/README.md
 !-- author: ywatanabe
-!-- date: 2024-12-04 05:00:23
+!-- date: 2024-12-04 05:06:21
 !-- --- -->
 
 
@@ -67,6 +67,9 @@ M-x sea-self-evolve
 ```
 
 ## Converts Natural Language into elisp functions in a strict JSON format
+./self-evolving-agent/src/prompts/language2elisp.md
+
+(sea-load-markdown-file (expand-file-name "language2elisp.md" sea-prompts-dir))
 
 
 ## 
