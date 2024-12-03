@@ -1,7 +1,7 @@
 <!-- ---
 !-- title: ./self-evolving-agent/README.md
 !-- author: ywatanabe
-!-- date: 2024-12-04 04:44:13
+!-- date: 2024-12-04 05:00:23
 !-- --- -->
 
 
@@ -45,10 +45,16 @@ M-x sea-self-evolve
 ./src/sea_server.sh execute '(progn (with-current-buffer (get-buffer-create "*test*") (insert "hello")) (switch-to-buffer "*test*"))'
 ```
 
-## Calling from elisp
+## Calling from Elisp
 
 ``` elisp
-(sea-exec-elisp-code "'\(message \"Hello SEA!!!\"\)'")
+(defun sea-escape-elisp-code (code)
+  "Prepare elisp CODE for sea-exec-elisp-code by adding proper escaping."
+  (format "'%s'" (prin1-to-string code)))
+
+(sea-exec-elisp-code (sea-escape-elisp-code '(message "hihihi")))
+
+(sea-exec-elisp-code "'\(message \"Hello SEA!!!\"\)'") # this works
 
 (sea-exec-elisp-code
  "'\(progn
@@ -59,6 +65,8 @@ M-x sea-self-evolve
 (sea--exec-elisp-code 
   "'\(message \"%s\" \(\+ 2 3\)\)'")
 ```
+
+## Converts Natural Language into elisp functions in a strict JSON format
 
 
 ## 
