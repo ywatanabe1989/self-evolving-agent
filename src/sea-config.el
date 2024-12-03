@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-04 05:58:17
-;;; Time-stamp: <2024-12-04 05:58:17 (ywatanabe)>
+;;; Author: 2024-12-04 06:34:09
+;;; Time-stamp: <2024-12-04 06:34:09 (ywatanabe)>
 ;;; File: ./self-evolving-agent/src/sea-config.el
 
 
@@ -110,7 +110,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; User Interaction
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defcustom sea-prompts-dir (expand-file-name "user-request.md" sea-requests-dir)
+(defcustom sea-prompts-dir (expand-file-name "prompts" sea-user-source-dir)
   "File for user's improvement requests."
   :type 'file
   :group 'sea)

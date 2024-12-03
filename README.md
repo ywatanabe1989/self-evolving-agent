@@ -1,7 +1,7 @@
 <!-- ---
 !-- title: ./self-evolving-agent/README.md
 !-- author: ywatanabe
-!-- date: 2024-12-04 05:54:00
+!-- date: 2024-12-04 07:25:04
 !-- --- -->
 
 
@@ -75,7 +75,38 @@ M-x sea-self-evolve
 ```
 
 ## Run Natural Language Task on Emacs run by SEA
-(sea--exec-elisp-code (sea--prompt-to-elisp "open a new buffer and write a welcome message, hello world as an ASCII art"))
+
+``` elisp
+
+(sea--exec-elisp-code 
+(sea--prompt-to-elisp 
+  "open a new buffer and write a welcome message, hello world as an ASCII art")
+)
+
+(defun sea-run (prompt)
+  (interactive)
+  (let ((elisp-code (sea--prompt-to-elisp prompt)))
+    (sea-exec-elisp-code elisp-code)))
+
+;; (sea-exec-elisp-code '(message "hello!!")) # works
+;; (sea-exec-elisp-code '(progn (generate-new-buffer *hello*) (switch-to-buffer *hello*) (insert Hi there!))) # not working
+
+(sea-run "make a new buffer and say hi") ; working
+
+(sea-run "open a new buffer and write a welcome message, hello world as an ASCII art")
+;; (progn (generate-new-buffer *hello*) (switch-to-buffer *hello*) (insert Hi there!))
+
+
+;; (sea-exec-elisp-code '(message "hello!!")) # this works
+(sea-exec-elisp-code '(progn (message Hello! I'm your self-evolving agent. How can I help you today?)))
+
+
+
+./src/sea_server.sh start &
+(sea-init-or-connect)
+
+```
+
 
 
 
