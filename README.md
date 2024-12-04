@@ -1,7 +1,7 @@
 <!-- ---
 !-- title: ./self-evolving-agent/README.md
 !-- author: ywatanabe
-!-- date: 2024-12-04 09:28:48
+!-- date: 2024-12-04 18:03:27
 !-- --- -->
 
 
@@ -75,21 +75,51 @@ M-x sea-self-evolve
 ## Run Natural Language Task on Emacs run by SEA
 
 ``` elisp
+ss rsync-emacs 
+sudo /home/ywatanabe/.bin/safe_rsync /home/emacs-agent/.emacs.d/ /home/sea/.emacs.d/ -- --chown=sea:sea
+sudo /home/ywatanabe/.bin/safe_rsync /home/ywatanabe/.dotfiles/.emacs.d/lisp/self-evolving-agent/ /home/sea/.emacs.d/lisp/self-evolving-agent/ -- --chown=sea:sea
+
+sudo cp /home/ywatanabe/.emacs.d/inits/300-tools/999-sea.el /home/sea/.emacs.d/inits/300-tools/999-sea.el
+sudo chown sea:sea /home/sea/.emacs.d/inits/300-tools/999-sea.el
+
+sudo chmod 770 /home/ywatanabe/.sea/logs/history.log
+
+sudo ls /home/emacs-agent/.emacs.d
+sudo ls /home/sea/.emacs.d
+sudo chown sea:sea -R /home/sea/.emacs.d
+
+
 (sea-kill-server)
-./src/sea_server.sh start
+./src/sea_server.sh start &
 (sea-init-or-connect)
 (sea-run "make a new buffer and say hi")
+
 
 (sea-backup-log)
 (sea-show-log)
 
+(sea-run "open a new buffer and write a welcome message, hello world as an ASCII art")
+(sea-run "open a new buffer and write a welcome message, hello world to SEA as an ASCII art, with cool and modern vibe, in the markdown mode or org mode for better visualization")
 
+(sea-run "update this ascii art for better looks
 
+  ▄▄▄▄▄▄▄  ▄▄▄▄▄▄  ▄▄▄▄▄▄▄
+  █ ▄▄▄▄█  █ ▄▄▄█  █ ▄▄▄ █
+  █ █▄▄▄▄  █ █▄▄▄  █ █ █ █
+  █▄▄▄▄ █  █ ▄▄▄█  █ █▄█ █
+  ▄▄▄▄█ █  █ █▄▄▄  █ █ █ █
+  █▄▄▄▄▄█  █▄▄▄▄█  █▄█ █▄█
 
-(sea--exec-elisp-code 
-(sea--prompt-to-elisp 
-  "open a new buffer and write a welcome message, hello world as an ASCII art")
-)
+  ========================
+  Self-Evolving Agent v1.0
+  ========================
+
+")
+
+(sea-run "write a logo of SEA for your branding")
+
+sudo chown sea:sea -R /home/sea/.emacs.d/lisp/self-evolving-agent/src/
+sudo chown sea:sea -R /home/ywatanabe/.dotfiles/.emacs.d/lisp/self-evolving-agent/src/
 
 
 ;; (sea-exec-elisp-code '(message "hello!!")) # works
