@@ -1,17 +1,13 @@
 <!-- ---
 !-- title: ./self-evolving-agent/src/docs/working_with_elisp.md
 !-- author: ywatanabe
-!-- date: 2024-12-05 19:21:31
+!-- date: 2024-12-06 02:50:15
 !-- --- -->
 
 
 # Working with Elisp
 
 ``` elisp
-(defun sea-escape-elisp-code (code)
-  "Prepare elisp CODE for sea-exec-elisp-code by adding proper escaping."
-  (format "'%s'" (prin1-to-string code)))
-
 (sea-exec-elisp-code (sea-escape-elisp-code '(message "hi")))
 
 (sea-exec-elisp-code "'\(message \"Hello SEA!!!\"\)'")

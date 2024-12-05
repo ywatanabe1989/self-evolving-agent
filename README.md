@@ -1,7 +1,7 @@
 <!-- ---
 !-- title: ./self-evolving-agent/README.md
 !-- author: ywatanabe
-!-- date: 2024-12-06 01:10:13
+!-- date: 2024-12-06 03:26:19
 !-- --- -->
 
 
@@ -34,16 +34,16 @@ M-x sea-install
 
 #### Launch an Emacs session from the SEA user
 ``` bash
-sudo echo aaa && ./src/sea_server.sh init # Fixme: `../src/sea-server.el` should control server setup
+(sea-init-server)
 ```
 
 #### Working from your Emacs session
 
 ``` elisp
-(sea--sudo-get-password)
 (sea-run "show welcome message")
 (sea-run "open google")
 (sea-run "write python code to calculate DMD from EEG demo signal and visualize results.")
+(sea-run "write sipmle python code")
 
 
 ```

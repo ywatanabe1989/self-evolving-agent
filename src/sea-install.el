@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-04 08:10:06
-;;; Time-stamp: <2024-12-04 08:10:06 (ywatanabe)>
+;;; Author: 2024-12-06 01:23:22
+;;; Time-stamp: <2024-12-06 01:23:22 (ywatanabe)>
 ;;; File: ./self-evolving-agent/src/sea-install.el
 
 
@@ -75,6 +75,7 @@
                       sea-workspace-dir
                       sea-backups-dir
                       sea-logs-dir
+                      sea-command-logs-dir
                       sea-requests-dir
                       sea-config-dir))
       (unless (file-exists-p dir)

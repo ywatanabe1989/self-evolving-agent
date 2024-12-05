@@ -1,6 +1,12 @@
 #!/bin/bash
-# Time-stamp: "2024-12-05 21:59:50 (ywatanabe)"
+# Time-stamp: "2024-12-06 03:16:51 (ywatanabe)"
 # File: ./self-evolving-agent/src/sea_server.sh
+
+# Check if script is run with sudo
+if [ "$EUID" -ne 0 ]; then
+    echo "Please run as root (with sudo)"
+    exit 1
+fi
 
 SEA_USER="${SEA_USER:-sea}"
 SEA_HOME=/home/"${SEA_USER:-sea}"
@@ -75,10 +81,10 @@ sea_init_or_connect() {
     local connected=0
     if ! _sea_is_server_running; then
         sea_init_server
-        while ! _sea_is_server_running; do
-            sleep 1
-            echo "Waiting for server..."
-        done
+        # while ! _sea_is_server_running; do
+        #     sleep 1
+        #     echo "Waiting for server..."
+        # done
         sleep 1
     fi
 
@@ -120,15 +126,28 @@ _sea_connect_server() {
     sudo -u "$SEA_USER" HOME="$SEA_HOME" emacsclient -s "$SEA_SOCKET_FILE" -c &
 }
 
+
 case "$COMMAND" in
     start)   sea_init_or_connect & ;;
     kill)    sea_kill_server & ;;
     init) sea_kill_server && sea_init_or_connect & ;;
-    status)  _sea_is_server_running && echo "Server is running" || echo "Server is not running" ;;
+    status)  _sea_is_server_running ;;
     execute) sea_execute "$2" & ;;
     help)    show_help ;;
     *)       show_help ;;
 esac
+
+# case "$COMMAND" in
+#     start)   sea_init_or_connect & ;;
+#     kill)    sea_kill_server & ;;
+#     init) sea_kill_server && sea_init_or_connect & ;;
+#     status)  _sea_is_server_running ;;
+#     execute) sea_execute "$2" & ;;
+#     help)    show_help ;;
+#     *)       show_help ;;
+# esac
+
+# && echo "Server is running" || echo "Server is not running" ;;
 
 
 # EOF

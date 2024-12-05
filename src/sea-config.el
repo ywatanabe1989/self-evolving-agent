@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-06 00:17:34
-;;; Time-stamp: <2024-12-06 00:17:34 (ywatanabe)>
+;;; Author: 2024-12-06 02:54:34
+;;; Time-stamp: <2024-12-06 02:54:34 (ywatanabe)>
 ;;; File: ./self-evolving-agent/src/sea-config.el
 
 
@@ -59,6 +59,12 @@
 (defvar sea-backups-dir (expand-file-name "backups" sea-work-dir))
 (defvar sea-logs-dir (expand-file-name "logs" sea-work-dir))
 (defvar sea-log-file (expand-file-name "history.log" sea-logs-dir))
+(defvar sea-command-logs-dir (expand-file-name "command-logs" sea-work-dir))
+(defvar sea-log-command-file
+  (expand-file-name
+   (format "%s.log"
+           (format-time-string "%Y%m%d-%H%M%S"))
+   sea-command-logs-dir))
 (defvar sea-requests-dir (expand-file-name "requests" sea-work-dir))
 (defvar sea-config-dir (expand-file-name "config" sea-work-dir))
 
@@ -81,6 +87,7 @@
   "Path to SEA server control script."
   :type 'string
   :group 'sea)
+;; Its value is
 ;; "/home/ywatanabe/.emacs.d/lisp/self-evolving-agent/src/sea_server.sh"
 
 (defvar sea-server-script-output nil
