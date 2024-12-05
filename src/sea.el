@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-04 09:35:49
-;;; Time-stamp: <2024-12-04 09:35:49 (ywatanabe)>
+;;; Author: 2024-12-06 00:26:34
+;;; Time-stamp: <2024-12-06 00:26:34 (ywatanabe)>
 ;;; File: ./self-evolving-agent/src/sea.el
 
 
@@ -38,6 +38,7 @@
 (require 'sea-server)
 (require 'sea-lang2elisp)
 (require 'sea-run)
+(require 'sea-python)
 
 (remove-hook 'after-change-functions #'genai-mode)
 

@@ -1,7 +1,7 @@
 <!-- ---
 !-- title: ./self-evolving-agent/README.md
 !-- author: ywatanabe
-!-- date: 2024-12-05 19:20:14
+!-- date: 2024-12-06 01:10:13
 !-- --- -->
 
 
@@ -30,11 +30,24 @@ M-x sea-install
 ```
 
 
-## Converts Natural Language into elisp code
+## Usage
+
+#### Launch an Emacs session from the SEA user
+``` bash
+sudo echo aaa && ./src/sea_server.sh init # Fixme: `../src/sea-server.el` should control server setup
+```
+
+#### Working from your Emacs session
 
 ``` elisp
-(sea--prompt-to-elisp "hello world")
+(sea--sudo-get-password)
+(sea-run "show welcome message")
+(sea-run "open google")
+(sea-run "write python code to calculate DMD from EEG demo signal and visualize results.")
+
+
 ```
+
 
 
 
