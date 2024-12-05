@@ -1,7 +1,7 @@
 <!-- ---
 !-- title: ./self-evolving-agent/README.md
 !-- author: ywatanabe
-!-- date: 2024-12-06 03:26:19
+!-- date: 2024-12-06 03:38:03
 !-- --- -->
 
 
@@ -13,39 +13,29 @@ NOW, THIS REPOSITORY IS UNDER DEVELOPMENT.
 
 ## Installation
 
-1. Clone repository:
 ```bash
 git clone https://github.com/user/self-evolving-agent.git ~/.emacs.d/lisp/self-evolving-agent
 ```
 
-2. Add to your Emacs config:
+## Configuration
 ```elisp
 (add-to-list 'load-path "~/.emacs.d/lisp/self-evolving-agent/src")
 (require 'sea)
+(sea-install)
 ```
 
-3. Call the installation function
-```elisp
-M-x sea-install
-```
-
-
-## Usage
-
-#### Launch an Emacs session from the SEA user
+## Launch an Emacs Window by the SEA user
 ``` bash
-(sea-init-server)
+M-x sea-init-server
 ```
 
-#### Working from your Emacs session
+## Working from your own Emacs session
 
 ``` elisp
 (sea-run "show welcome message")
 (sea-run "open google")
 (sea-run "write python code to calculate DMD from EEG demo signal and visualize results.")
 (sea-run "write sipmle python code")
-
-
 ```
 
 
