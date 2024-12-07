@@ -1,5 +1,5 @@
 #!/bin/bash
-# Time-stamp: "2024-12-06 03:16:51 (ywatanabe)"
+# Time-stamp: "2024-12-06 05:04:19 (ywatanabe)"
 # File: ./self-evolving-agent/src/sea_server.sh
 
 # Check if script is run with sudo
@@ -56,6 +56,7 @@ COMMAND="${1:-start}"
 sea_kill_server() {
     if _sea_is_server_running; then
         sudo -u "$SEA_USER" emacsclient -e '(kill-emacs)' && sleep 1
+        sudo rm "$SEA_SOCKET_FILE"
         if _sea_is_server_running; then
             sudo pkill -u "$SEA_USER" && sleep 1
         fi
@@ -81,10 +82,6 @@ sea_init_or_connect() {
     local connected=0
     if ! _sea_is_server_running; then
         sea_init_server
-        # while ! _sea_is_server_running; do
-        #     sleep 1
-        #     echo "Waiting for server..."
-        # done
         sleep 1
     fi
 
@@ -119,6 +116,9 @@ _sea_setup_server_dir() {
     sudo rm -rf "$SEA_SOCKET_DIR"
     sudo -u "$SEA_USER" mkdir -p "$SEA_SOCKET_DIR"
     sudo chmod 700 "$SEA_SOCKET_DIR"
+    sudo chown "$SEA_USER":"$SEA_USER" "$SEA_SOCKET_DIR"
+    # sudo chmod 770 "$SEA_SOCKET_DIR"
+    # sudo chmod 770 "$SEA_SOCKET_FILE"
     sudo chown "$SEA_USER":"$SEA_USER" "$SEA_SOCKET_DIR"
 }
 
