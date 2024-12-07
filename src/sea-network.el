@@ -1,21 +1,15 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-02 06:49:51
-;;; Time-stamp: <2024-12-02 06:49:51 (ywatanabe)>
+;;; Author: 2024-12-03 16:42:33
+;;; Time-stamp: <2024-12-03 16:42:33 (ywatanabe)>
 ;;; File: ./self-evolving-agent/src/sea-network.el
 
-
-;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-01 20:21:47
-;;; Time-stamp: <2024-12-01 20:21:47 (ywatanabe)>
-;;; File: ./.dotfiles/.emacs.d/lisp/self-evolving-agent/network.el
 
 ;;; Commentary:
 ;; Network functionality for self-evolving agent
 
 ;;; Code:
 
-(require 'sea-seed)
-(require 'sea-think)
+(require 'sea-run)
 
 (defvar sea-server-port 8080
   "Port for agent server.")
@@ -45,7 +39,7 @@
     (when (string-match "\n" string)
       (let ((command (buffer-substring (point-min) (point-max))))
         (erase-buffer)
-        (sea-think command)))))
+        (sea-run command)))))
 
 (defun sea-spawn-agents (tasks)
   "Spawn multiple agents for TASKS."
@@ -64,7 +58,7 @@
        (format "Agent %s processing: %s"
                (sea-agent-id agent)
                (sea-agent-task agent)))
-      (sea-think (sea-agent-task agent)))))
+      (sea-run (sea-agent-task agent)))))
 
 (provide 'sea-network)
 

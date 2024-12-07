@@ -1,44 +1,39 @@
 ;;; -*- lexical-binding: t -*-
-;;; Author: 2024-12-02 07:27:18
-;;; Time-stamp: <2024-12-02 07:27:18 (ywatanabe)>
+;;; Author: 2024-12-06 01:23:22
+;;; Time-stamp: <2024-12-06 01:23:22 (ywatanabe)>
 ;;; File: ./self-evolving-agent/src/sea-install.el
 
-
-;;; sea-install.el --- Installation script for Self-Evolving Agent  -*- lexical-binding: t; -*-
-
-;; Copyright (C) 2023-2024 Free Software Foundation, Inc.
-
-;; Author: Your Name <your.email@example.com>
-;; Version: 0.1
-;; Package-Requires: ((emacs "28.1"))
-;; Keywords: ai, automation
-;; URL: https://github.com/yourusername/self-evolving-agent
-
-;;; Commentary:
-;; Installation and setup script for Self-Evolving Agent (SEA)
-
-;;; Code:
 
 (require 'sea-config)
 (require 'cl-lib)
 (require 'auth-source)
 (require 'sea-verify-installation)
+(require 'sea-logging)
 
-(defvar sea--installation-log-file (expand-file-name "installation.log" sea-logs-dir)
-  "Log file for SEA installation.")
 
-(defun sea--log-message (message)
-  "Log MESSAGE with timestamp."
-  (unless (file-exists-p sea-logs-dir)
-    (make-directory sea-logs-dir t))
-  (unless (file-exists-p sea--installation-log-file)
-    (write-region "" nil sea--installation-log-file))
+(defun sea-setup-sudo ()
+  "Setup sudo configuration for SEA."
+  (interactive)
+  (let ((sudo-file "/etc/sudoers.d/sea-emacs")
+        (temp-file (make-temp-file "sea-sudo"))
+        (content (format "%s ALL=(%s) NOPASSWD: %s\n"
+                        (user-login-name)
+                        sea-user
+                        sea-emacs-cli)))
+    (write-region content nil temp-file)
+    (call-process "sudo" nil nil nil
+                 "cp" temp-file sudo-file)
+    (call-process "sudo" nil nil nil
+                 "chown" "root:root" sudo-file)
+    (call-process "sudo" nil nil nil
+                 "chmod" "440" sudo-file)
+    (delete-file temp-file)))
 
-  (let ((timestamp (format-time-string "[%Y-%m-%d %H:%M:%S]")))
-    (with-temp-buffer
-      (insert (format "%s %s\n" timestamp message))
-      (append-to-file (point-min) (point-max) sea--installation-log-file)
-      (message "%s %s" timestamp message))))
+;; (sea-setup-sudo)
+
+;; # /etc/sudoers.d/sea-emacs
+;; ywatanabe ALL=(sea) NOPASSWD: /usr/bin/emacsclient
+
 
 (defun sea--check-dependencies ()
   "Check if required system dependencies are available."
@@ -80,6 +75,7 @@
                       sea-workspace-dir
                       sea-backups-dir
                       sea-logs-dir
+                      sea-command-logs-dir
                       sea-requests-dir
                       sea-config-dir))
       (unless (file-exists-p dir)
@@ -427,6 +423,8 @@ If MAIN-USER is nil, use current user."
 
           ;; Final verification
           (sea-verify-installation)
+
+          (sea-setup-sudo)
 
           (sea--log-message "SEA installation completed successfully!")
           t)
